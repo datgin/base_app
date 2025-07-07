@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/* Custom scrollbar for webkit browsers */
+nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+nav::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 2px;
+}
+
+nav::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  /* Lighter track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #adb5bd;
+  /* Grey thumb */
+  border-radius: 2.5px;
+}
+
+input::placeholder {
+  font-weight: 400; /* bold */
+}
+
+.ant-input-affix-wrapper-lg {
+  border-radius: 4px !important;
+  padding: 6px 11px !important;
+}
+
+.ant-select-multiple.ant-select-lg .ant-select-selector,
+.ant-select-single.ant-select-lg .ant-select-selector {
+  border-radius: 4px !important;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.ant-page-header {
+  padding: 15px 24px !important;
+}
