@@ -39,6 +39,12 @@
             >
               Lưu trữ đã chọn
             </button>
+            <button
+              @click="handleBulkAction('publish')"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Thay đổi trạng thái
+            </button>
           </div>
         </div>
       </div>
@@ -73,13 +79,15 @@
 
     <!-- Right: Create + Reload -->
     <div class="flex items-center gap-3">
-      <button
+      <router-link
+      v-if="routeName"
+        :to="{ name: routeName }"
         @click="emits('create')"
         class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-700 border border-transparent rounded hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
         <PlusIcon class="w-4 h-4" />
         Tạo mới
-      </button>
+      </router-link>
 
       <button
         @click="emits('reload')"
@@ -93,7 +101,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watchEffect } from "vue";
 import {
   ChevronDownIcon,
   SearchIcon,
@@ -111,6 +119,7 @@ const props = defineProps({
   searchText: { type: String, default: "" },
   archive: { type: Number, default: 1 },
   modelName: { type: String },
+  routeName: { type: String },
 });
 
 // Emits
@@ -133,11 +142,14 @@ const toggleBulkActions = () => {
 };
 
 const handleBulkAction = (action) => {
+  let actionText = "";
+  if (action === "delete") actionText = "xoá";
+  else if (action === "archive") actionText = "lưu trữ";
+  else if (action === "publish") actionText = "thay đổi trạng thái";
+
   Modal.confirm({
     title: "Xác nhận hành động",
-    content: `Bạn có chắc chắn muốn ${
-      action === "delete" ? "xoá" : "lưu trữ"
-    } các mục đã chọn không?`,
+    content: `Bạn có chắc chắn muốn ${actionText} các mục đã chọn không?`,
     okText: "Xác nhận",
     cancelText: "Huỷ",
     okType: action === "delete" ? "danger" : "primary",
@@ -157,12 +169,11 @@ const onChangeArchiveFilter = (value) => {
 const onSearchInput = () => {
   emits("search", localSearchText.value);
 }; // Theo dõi khi props thay đổi (ví dụ khi reset từ cha)
-watch(
-  () => props.searchText,
-  (val) => {
-    localSearchText.value = val;
-  }
-);
+
+watchEffect(() => {
+  localSearchText.value = props.searchText;
+  localArchive.value = props.archive;
+});
 
 const goBack = () => {
   router.back(); // ← sẽ quay lại history trước đó

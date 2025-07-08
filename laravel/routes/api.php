@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BulkActionController;
+use App\Http\Controllers\Api\ExampleController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -43,12 +44,22 @@ Route::group(['middleware' => 'api'], function () {
             }
         );
 
-        Route::prefix('bulk')
-            ->controller(BulkActionController::class)
-            ->group(function () {
+        Route::group(
+            [
+                'prefix' => 'bulk',
+                'controller' => BulkActionController::class
+            ],
+            function () {
                 Route::post('{model}/delete', 'bulkDelete');
                 Route::post('{model}/archive', 'bulkArchive');
-            });
+                Route::post('{model}/publish', 'bulkPublish');
+            }
+        );
+
+        Route::group(['prefix' => 'examples', 'controller' => ExampleController::class], function () {
+            Route::get('/', 'index');
+            Route::post('/', 'store');
+        });
     });
 
 

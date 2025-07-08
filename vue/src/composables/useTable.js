@@ -60,9 +60,10 @@ export default function useTable(options = {}) {
       }
 
       const res = await axiosInstance.get(api, { params });
-      const responseData = res.data;
 
-      dataSource.value = responseData.data || [];
+      const responseData = res.data.data;
+
+      dataSource.value = responseData.items || [];
       total.value = responseData.total || 0;
       pagination.value.total = total.value;
     } catch (err) {
@@ -119,8 +120,8 @@ export default function useTable(options = {}) {
       });
 
       selectedRowKeys.value = [];
-      message.success(response.data.message);
       fetchData();
+      message.success(response.data.message);
     } catch (err) {
       console.log(err);
 

@@ -19,6 +19,7 @@ export default function useCrud() {
     try {
       const res = await axios.get(url, { params });
       const { data: payload, ...rest } = res.data;
+      
       data.value = payload;
       meta.value = rest;
     } catch (err) {
@@ -44,7 +45,7 @@ export default function useCrud() {
     }
   };
 
-  const create = async (url, payload) => {
+  const post = async (url, payload) => {
     resetStatus();
     try {
       const res = await axios.post(url, payload);
@@ -59,7 +60,7 @@ export default function useCrud() {
     }
   };
 
-  const update = async (url, payload) => {
+  const put = async (url, payload) => {
     resetStatus();
     try {
       const res = await axios.put(url, payload);
@@ -114,8 +115,8 @@ export default function useCrud() {
     error,
     getList,
     getOne,
-    create,
-    update,
+    post,
+    put,
     uploadMultipart,
   };
 }

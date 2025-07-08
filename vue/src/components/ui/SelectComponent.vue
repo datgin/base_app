@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <label v-if="label" :for="name" :class="labelClass">
       {{ label }}
       <span v-if="required" class="font-semibold text-red-500">(*)</span>

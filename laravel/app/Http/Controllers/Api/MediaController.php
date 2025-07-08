@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\MediaResource;
+use App\Http\Resources\Media\MediaCollection;
 use App\Models\Media;
 use App\Traits\Pagination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class MediaController extends Controller
 {
@@ -18,16 +17,13 @@ class MediaController extends Controller
      */
     public function index()
     {
-        $response = $this->pagination(
+        $resource = $this->pagination(
             query: Media::query(),
         );
 
-        $media = MediaResource::collection($response['data']);
+        $response = new MediaCollection($resource);
 
-        return response()->json([
-            'media' => $media,
-            'total' => $response['total']
-        ]);
+        return successResponse(data: $response);
     }
 
     public function upload(Request $request)

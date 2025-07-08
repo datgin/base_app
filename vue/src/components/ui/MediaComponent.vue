@@ -8,7 +8,11 @@
 
     <!-- Upload khung -->
     <div
-      class="border border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition"
+      class="border border-dashed rounded p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition"
+      :class="{
+        'border-red-500': errorMessage,
+        'border-gray-300': !errorMessage,
+      }"
       @click="openPopup"
     >
       <div

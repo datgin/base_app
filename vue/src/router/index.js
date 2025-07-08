@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import authGuard from "@//middleware/auth.js";
 import userRoutes from "@/router/user.js";
 import productRoutes from "@/router/product.js";
+import exampleRoutes from "@/router/example.js";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +19,7 @@ const router = createRouter({
         },
         ...userRoutes,
         ...productRoutes,
+        ...exampleRoutes,
       ],
     },
     {

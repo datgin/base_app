@@ -92,26 +92,17 @@ trait Pagination
 
         logger('[QUERY_BUILDER]', ['sql' => $query->toRawSql(), 'bindings' => $query->getBindings()]);
 
+        $perPage = intval($conditions['per_page'] ?? 10);
+        $page = intval($conditions['page'] ?? 1);
+
         if ($all) {
             if (!empty($conditions['limit'])) {
-                $data = $query->limit(intval($conditions['limit']))->get();
-            } else {
-                $data = $query->get();
+                $limit = intval($conditions['limit']);
+                $query->limit($limit);
             }
-
-            return [
-                'data' => $data,
-                'total' => $data->count(),
-            ];
+            return $query->get();
         } else {
-            $perPage = intval($conditions['per_page'] ?? 10);
-            $page = intval($conditions['page'] ?? 1);
-            $paginator = $query->paginate($perPage, ['*'], 'page', $page);
-
-            return [
-                'data' => $paginator->items(),
-                'total' => $paginator->total(),
-            ];
+            return $query->paginate($perPage, $columns, 'page', $page);
         }
     }
 }

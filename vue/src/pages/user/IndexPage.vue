@@ -5,7 +5,7 @@
     <TableActions
       @search="onSearch"
       @reload="resetFilters"
-      @handleBulkAction="handleBulkAction"
+      @bulk-action="handleBulkAction"
       @filter-archive="handleArchiveFilter"
       :searchText="searchText"
     />

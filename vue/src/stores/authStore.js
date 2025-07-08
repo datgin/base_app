@@ -10,11 +10,11 @@ export const useAuthStore = defineStore("auth", () => {
   const token = ref(localStorage.getItem("token") || null);
   const tokenExpiry = ref(parseInt(localStorage.getItem("tokenExpiry") || "0"));
 
-  const { getOne, create, data, error, loading } = useCrud();
+  const { getOne, post, data, error, loading } = useCrud();
 
   async function login(payload) {
     try {
-      const response = await create("/auth/login", payload);
+      const response = await post("/auth/login", payload);
 
       token.value = response.access_token;
       tokenExpiry.value = Date.now() + response.expires_in * 1000;

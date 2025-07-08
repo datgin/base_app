@@ -40,12 +40,19 @@ input::placeholder {
 
 .ant-input-affix-wrapper-lg {
   border-radius: 4px !important;
-  padding: 6px 11px !important;
+  padding: 7px 11px !important;
 }
 
 .ant-select-multiple.ant-select-lg .ant-select-selector,
-.ant-select-single.ant-select-lg .ant-select-selector {
+.ant-select-single.ant-select-lg .ant-select-selector,
+.ant-input-lg,
+.ant-picker-large,
+.ant-input-number-lg {
   border-radius: 4px !important;
+}
+
+.ant-select-single.ant-select-lg .ant-select-selector {
+  font-size: 14px !important;
 }
 
 .hide-scrollbar::-webkit-scrollbar {

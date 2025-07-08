@@ -7,3 +7,7 @@ export function debounce(fn, delay = 300) {
     }, delay);
   };
 }
+
+export function stripHtml(html) {
+  return html.replace(/<[^>]*>/g, "").trim();
+}

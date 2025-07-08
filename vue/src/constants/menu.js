@@ -1,4 +1,4 @@
-import { Home, Users, Package } from "lucide-vue-next";
+import { Home, Users, Package, FlaskConical } from "lucide-vue-next";
 
 export const menuItems = [
   {
@@ -10,6 +10,11 @@ export const menuItems = [
     name: "Khách hàng",
     routeName: "users.index",
     icon: Users,
+  },
+  {
+    name: "Examples",
+    routeName: "examples.index",
+    icon: FlaskConical,
   },
   {
     name: "Sản phẩm",

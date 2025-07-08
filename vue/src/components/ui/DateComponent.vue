@@ -1,19 +1,20 @@
 <template>
-  <div class="">
+  <div>
     <label v-if="props.label" :for="props.name" :class="props.labelClass">
       {{ props.label }}
       <span v-if="props.required" class="font-semibold text-red-500">(*)</span>
     </label>
+
     <!-- Date Picker -->
     <a-date-picker
-      v-if="props.type === 'date'"
+      v-if="props.type === 'date' || props.type === 'datetime'"
       v-model:value="innerValue"
       :class="className"
       :id="props.name"
       :status="errorMessage ? 'error' : ''"
       :size="props.size"
       :allowClear="true"
-      :show-time="props.showTime"
+      :show-time="props.type === 'datetime'"
       :placeholder="props.placeholder"
       :format="props.format"
       @change="handleChange"
@@ -21,44 +22,16 @@
 
     <!-- Date Range Picker -->
     <a-range-picker
-      v-if="props.type === 'date-range'"
+      v-if="props.type === 'range-date' || props.type === 'range-datetime'"
       v-model:value="innerValue"
       :class="className"
       :id="props.name"
       :status="errorMessage ? 'error' : ''"
       :size="props.size"
       :allowClear="true"
-      :show-time="props.showTime"
+      :show-time="props.type === 'range-datetime'"
       :placeholder="props.rangePlaceholder"
       :format="props.format"
-      @change="handleChange"
-    />
-
-    <!-- Time Picker -->
-    <a-time-picker
-      v-if="props.type === 'time'"
-      v-model:value="innerValue"
-      :class="className"
-      :id="props.name"
-      :status="errorMessage ? 'error' : ''"
-      :size="props.size"
-      :allowClear="true"
-      :placeholder="props.placeholder"
-      :format="props.timeFormat"
-      @change="handleChange"
-    />
-
-    <!-- Time Range Picker -->
-    <a-time-range-picker
-      v-if="props.type === 'time-range'"
-      v-model:value="innerValue"
-      :class="className"
-      :id="props.name"
-      :status="errorMessage ? 'error' : ''"
-      :size="props.size"
-      :allowClear="true"
-      :placeholder="props.rangePlaceholder"
-      :format="props.timeFormat"
       @change="handleChange"
     />
 
@@ -76,24 +49,22 @@ import isEqual from "lodash/isEqual";
 
 // Props
 const props = defineProps({
-  type: { type: String, default: "date" }, // 'date', 'date-range', 'time', 'time-range'
+  type: { type: String, default: "date" }, // 'date', 'datetime', 'range-date', 'range-datetime'
   required: { type: [Boolean, String], default: false },
   label: { type: String, default: "" },
   labelClass: {
     type: String,
-    default: "mb-2 block text-sm font-medium text-gray-900",
+    default: "mb-1 block text-sm font-medium text-gray-900",
   },
   name: { type: String, required: true },
   className: { type: String, default: "w-full" },
   size: { type: String, default: "large" },
-  showTime: { type: Boolean, default: false },
   placeholder: { type: String, default: "Vui lòng chọn thời gian" },
   rangePlaceholder: {
     type: Array,
     default: () => ["Chọn bắt đầu", "Chọn kết thúc"],
   },
   format: { type: String, default: "DD/MM/YYYY" },
-  timeFormat: { type: String, default: "HH:mm:ss" },
 });
 
 // Emits
@@ -105,24 +76,18 @@ const { value, errorMessage } = useField(props.name);
 // Inner value để binding với Ant Design Picker
 const innerValue = ref(null);
 
-// Đồng bộ ngược lại khi innerValue thay đổi để lưu dữ liệu string
+// Đồng bộ innerValue -> value
 watch(
   innerValue,
   (newVal) => {
     let formattedValue;
-    if (props.type === "date") {
+
+    if (props.type === "date" || props.type === "datetime") {
       formattedValue = newVal ? dayjs(newVal).format(props.format) : "";
-    } else if (props.type === "date-range") {
+    } else if (props.type === "range-date" || props.type === "range-datetime") {
       formattedValue =
         Array.isArray(newVal) && newVal.length === 2
           ? newVal.map((d) => (d ? dayjs(d).format(props.format) : ""))
-          : null;
-    } else if (props.type === "time") {
-      formattedValue = newVal ? dayjs(newVal).format(props.timeFormat) : "";
-    } else if (props.type === "time-range") {
-      formattedValue =
-        Array.isArray(newVal) && newVal.length === 2
-          ? newVal.map((d) => (d ? dayjs(d).format(props.timeFormat) : ""))
           : [];
     } else {
       formattedValue = newVal;
@@ -135,24 +100,18 @@ watch(
   { deep: true }
 );
 
-// Đồng bộ khi value bên ngoài thay đổi (VD: reset form)
+// Đồng bộ value -> innerValue (VD: reset form)
 watch(
   value,
   (newVal) => {
     let parsedValue;
-    if (props.type === "date") {
+
+    if (props.type === "date" || props.type === "datetime") {
       parsedValue = newVal ? dayjs(newVal, props.format) : null;
-    } else if (props.type === "date-range") {
+    } else if (props.type === "range-date" || props.type === "range-datetime") {
       parsedValue =
         Array.isArray(newVal) && newVal.length === 2
           ? newVal.map((d) => (d ? dayjs(d, props.format) : null))
-          : null;
-    } else if (props.type === "time") {
-      parsedValue = newVal ? dayjs(newVal, props.timeFormat) : null;
-    } else if (props.type === "time-range") {
-      parsedValue =
-        Array.isArray(newVal) && newVal.length === 2
-          ? newVal.map((d) => (d ? dayjs(d, props.timeFormat) : null))
           : [];
     } else {
       parsedValue = newVal;
@@ -165,7 +124,7 @@ watch(
   { immediate: true }
 );
 
-// Event khi user change
+// Emit onChange khi user change
 const handleChange = (val) => {
   emits("onChange", val);
 };

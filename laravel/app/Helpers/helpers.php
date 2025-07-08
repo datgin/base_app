@@ -95,7 +95,7 @@ if (!function_exists('showImage')) {
             return $storage->url($image);
         }
 
-        return null;
+        return asset('images/img_default.jpg');
     }
 }
 
@@ -157,5 +157,14 @@ if (!function_exists('transaction')) {
 
             return errorResponse('Có lỗi xảy ra, vui lòng thử lại sau!');
         }
+    }
+}
+
+if (!function_exists('formatPrice')) {
+    function formatPrice($price)
+    {
+        if (empty($price) || $price === null) return 0;
+
+        return number_format($price, 0, ',', '.');
     }
 }

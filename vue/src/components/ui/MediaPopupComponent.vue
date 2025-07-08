@@ -28,7 +28,7 @@
         <!-- Content -->
         <div class="flex flex-1 overflow-hidden">
           <div
-            v-if="isLoading"
+            v-if="loading"
             class="absolute inset-0 bg-white/70 z-50 flex items-center justify-center"
           >
             <span class="loader"></span>
@@ -42,6 +42,7 @@
             >
               <div class="flex gap-2 items-center">
                 <button
+                  type="button"
                   @click="triggerFileInput"
                   class="w-2/4 md:w-auto px-4 py-2 border border-blue-600 text-white rounded font-semibold bg-blue-600 hover:text-blue-600 hover:bg-white transition flex items-center gap-2 cursor-pointer"
                 >
@@ -59,6 +60,7 @@
 
                 <button
                   @click="handleDelete"
+                  type="button"
                   class="flex-1 md:flex-none px-4 py-2 border border-red-600 text-red-600 hover:bg-red-600 rounded font-semibold bg-white hover:text-white transition flex items-center gap-2 cursor-pointer"
                 >
                   <Trash class="w-5 h-5" /> Xoá ảnh đã chọn
@@ -97,7 +99,7 @@
             <div class="flex-1 min-h-0 overflow-y-auto">
               <!-- Hiển thị khi không có ảnh -->
               <div
-                v-if="!isLoading && !images.length"
+                v-if="!loading && !images.length"
                 class="p-6 text-center text-gray-500 animate-bounce-slow"
               >
                 <p class="text-sm">Không có ảnh nào được tìm thấy</p>
@@ -242,6 +244,9 @@ import {
 } from "lucide-vue-next";
 import { message, Modal } from "ant-design-vue";
 import axios from "@/config/axios";
+import useCrud from "@/composables/useCrud.js";
+
+const { uploadMultipart, getList, data, loading } = useCrud();
 
 const props = defineProps({
   multiple: { type: Boolean, default: false },
@@ -251,7 +256,6 @@ const props = defineProps({
 const fileInput = ref(null);
 const total = ref(0);
 const images = ref([]);
-const isLoading = ref(false);
 const currentPage = ref(1);
 const pageSize = ref(20);
 const searchText = ref(null);
@@ -259,10 +263,6 @@ const searchText = ref(null);
 function triggerFileInput() {
   fileInput.value?.click();
 }
-
-const debouncedSearch = debounce(() => {
-  fetchImages(1, pageSize.value); // reset về page 1, giữ nguyên pageSize
-}, 400);
 
 async function handleFileUpload(event) {
   const files = Array.from(event.target.files);
@@ -280,21 +280,14 @@ async function handleFileUpload(event) {
     return;
   }
 
-  const formData = new FormData();
-  files.forEach((file) => formData.append("images[]", file));
-
   try {
-    isLoading.value = true;
-    await axios.post("/media/upload", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    await fetchImages();
+    await uploadMultipart("/media/upload", { images: files });
+    fetchImages();
     message.success("Tải ảnh thành công");
   } catch (error) {
     console.error("Lỗi upload:", error);
     message.error("Tải ảnh thất bại");
   } finally {
-    isLoading.value = false;
     fileInput.value.value = "";
   }
 }
@@ -313,7 +306,6 @@ async function handleDelete() {
     cancelText: "Huỷ",
     async onOk() {
       try {
-        isLoading.value = true;
         const ids = selectedImages.value.map((img) => img.id);
         await axios.delete("/media/destroy", { data: { ids } });
         selectedImages.value = [];
@@ -322,29 +314,31 @@ async function handleDelete() {
       } catch (error) {
         console.error("Lỗi khi xoá ảnh:", error);
         message.error("Xoá ảnh thất bại");
-      } finally {
-        isLoading.value = false;
       }
     },
   });
 }
 
+const debouncedSearch = debounce(() => {
+  fetchImages(1, pageSize.value); // reset về page 1, giữ nguyên pageSize
+}, 400);
+
 const emit = defineEmits(["close", "select"]);
 
 const fetchImages = async (page = 1, perPage = pageSize.value) => {
   try {
-    isLoading.value = true;
-    const response = await axios.get("/media", {
-      params: { page, per_page: perPage, searchText: searchText.value },
+    await getList("/media", {
+      page,
+      per_page: perPage,
+      searchText: searchText.value,
     });
-    images.value = response.data.media;
-    total.value = response.data.total;
+
+    images.value = data.value.items;
+    total.value = data.value.total;
     currentPage.value = page;
   } catch (e) {
     console.log(e);
     message.error("Không thể tải danh sách ảnh");
-  } finally {
-    isLoading.value = false;
   }
 };
 
@@ -365,14 +359,10 @@ function toggleSelect(image) {
       (img) => img.path === image.path
     );
 
-    console.log(index);
-
     if (index !== -1) {
-      console.log(123);
 
       selectedImages.value.splice(index, 1);
     } else {
-      console.log(456);
 
       selectedImages.value.push(image);
     }

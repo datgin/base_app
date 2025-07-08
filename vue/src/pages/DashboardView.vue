@@ -68,7 +68,7 @@
               />
             </CardComponent>
             <CardComponent>
-              <SwitchComponent
+              <FormSwitchComponent
                 name="is_active"
                 label="Trạng thái"
                 checked-label="Bật"
@@ -103,7 +103,7 @@ const options = [
 
 import * as yup from "yup";
 import DateComponent from "../components/ui/DateComponent.vue";
-import SwitchComponent from "../components/ui/SwitchComponent.vue";
+import FormSwitchComponent from "../components/ui/FormSwitchComponent.vue";
 
 const schema = yup.object({
   attribute_id: yup.mixed().required("Vui lòng chọn thuộc tính"),

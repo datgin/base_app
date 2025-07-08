@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <label
       v-if="
         props.label &&
@@ -12,6 +12,11 @@
       {{ props.label }}
       <span v-if="props.required" class="font-semibold text-red-500">(*)</span>
     </label>
+
+    <a-input-number
+      v-if="props.typeInput === 'number'"
+      v-bind="numberBindings"
+    />
 
     <!-- a-input -->
     <a-input
@@ -65,7 +70,7 @@ const props = defineProps({
   label: { type: String, default: "" },
   labelClass: {
     type: String,
-    default: "mb-2 block text-sm font-medium text-gray-900",
+    default: "mb-1 block text-sm font-medium text-gray-900",
   },
   name: { type: String, required: true },
   className: { type: String, default: "" },
@@ -91,7 +96,18 @@ const inputBindings = computed(() => ({
   status: errorMessage.value ? "error" : "",
   size: props.size,
   allowClear: true,
-  class: props.className, // bo góc 4px đồng nhất
+  class: props.className,
+}));
+
+const numberBindings = computed(() => ({
+  value: value.value,
+  "onUpdate:value": (val) => (value.value = val),
+  id: props.name,
+  placeholder: props.placeholder,
+  status: errorMessage.value ? "error" : "",
+  size: props.size,
+  class: props.className,
+  style: "width: 100%", // full width
 }));
 
 // Bindings for a-textarea
