@@ -1,13 +1,13 @@
 export function debounce(fn, delay = 300) {
-  let timer = null;
+  let timer = null
   return (...args) => {
-    clearTimeout(timer);
+    clearTimeout(timer)
     timer = setTimeout(() => {
-      fn(...args);
-    }, delay);
-  };
+      fn(...args)
+    }, delay)
+  }
 }
 
 export function stripHtml(html) {
-  return html.replace(/<[^>]*>/g, "").trim();
+  return html.replace(/<[^>]*>/g, '').trim()
 }

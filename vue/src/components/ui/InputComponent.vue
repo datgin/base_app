@@ -1,11 +1,7 @@
 <template>
   <div>
     <label
-      v-if="
-        props.label &&
-        props.typeInput !== 'checkbox' &&
-        props.typeInput !== 'radio'
-      "
+      v-if="props.label && props.typeInput !== 'checkbox' && props.typeInput !== 'radio'"
       :for="props.name"
       :class="props.labelClass"
     >
@@ -13,10 +9,7 @@
       <span v-if="props.required" class="font-semibold text-red-500">(*)</span>
     </label>
 
-    <a-input-number
-      v-if="props.typeInput === 'number'"
-      v-bind="numberBindings"
-    />
+    <a-input-number v-if="props.typeInput === 'number'" v-bind="numberBindings" />
 
     <!-- a-input -->
     <a-input
@@ -31,10 +24,7 @@
     />
 
     <!-- a-textarea -->
-    <a-textarea
-      v-if="props.typeInput === 'textarea'"
-      v-bind="textareaBindings"
-    />
+    <a-textarea v-if="props.typeInput === 'textarea'" v-bind="textareaBindings" />
 
     <!-- a-checkbox -->
     <a-checkbox
@@ -61,54 +51,54 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useField } from "vee-validate";
+import { computed } from 'vue'
+import { useField } from 'vee-validate'
 
 const props = defineProps({
-  typeInput: { type: String, default: "text" }, // text, textarea, checkbox, radio
+  typeInput: { type: String, default: 'text' }, // text, textarea, checkbox, radio
   required: { type: [Boolean, String], default: false },
-  label: { type: String, default: "" },
+  label: { type: String, default: '' },
   labelClass: {
     type: String,
-    default: "mb-1 block text-sm font-medium text-gray-900",
+    default: 'mb-1 block text-sm font-medium text-gray-900',
   },
   name: { type: String, required: true },
-  className: { type: String, default: "" },
-  type: { type: String, default: "text" }, // for text input/password
-  placeholder: { type: String, default: "" },
-  size: { type: String, default: "large" },
+  className: { type: String, default: '' },
+  type: { type: String, default: 'text' }, // for text input/password
+  placeholder: { type: String, default: '' },
+  size: { type: String, default: 'large' },
   maxlength: { type: [String, Number, Boolean], default: 0 },
   options: { type: Array, default: () => [] }, // for radio
-});
+})
 
 // VeeValidate useField
 const { value, errorMessage } = useField(props.name, undefined, {
   validateOnValueUpdate: true, // realtime validation
-});
+})
 
 // Bindings for a-input and a-input-password
 const inputBindings = computed(() => ({
   value: value.value,
-  "onUpdate:value": (val) => (value.value = val),
+  'onUpdate:value': (val) => (value.value = val),
   id: props.name,
   type: props.type,
   placeholder: props.placeholder,
-  status: errorMessage.value ? "error" : "",
+  status: errorMessage.value ? 'error' : '',
   size: props.size,
   allowClear: true,
   class: props.className,
-}));
+}))
 
 const numberBindings = computed(() => ({
   value: value.value,
-  "onUpdate:value": (val) => (value.value = val),
+  'onUpdate:value': (val) => (value.value = val),
   id: props.name,
   placeholder: props.placeholder,
-  status: errorMessage.value ? "error" : "",
+  status: errorMessage.value ? 'error' : '',
   size: props.size,
   class: props.className,
-  style: "width: 100%", // full width
-}));
+  style: 'width: 100%', // full width
+}))
 
 // Bindings for a-textarea
 const textareaBindings = computed(() => ({
@@ -116,5 +106,5 @@ const textareaBindings = computed(() => ({
   autoSize: { minRows: 2, maxRows: 50 },
   showCount: true,
   maxlength: props.maxlength > 0 ? props.maxlength : undefined,
-}));
+}))
 </script>

@@ -2,9 +2,7 @@
   <aside
     :class="[
       'fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out flex flex-col',
-      props.isMobileOpen
-        ? 'translate-x-0'
-        : '-translate-x-full lg:translate-x-0',
+      props.isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
       props.isCollapsed ? 'lg:w-19' : 'lg:w-64',
     ]"
   >
@@ -16,10 +14,7 @@
     </header>
 
     <!-- Navigation -->
-    <nav
-      class="flex-1 px-4 py-4 space-y-2 overflow-y-auto relative"
-      aria-label="Main navigation"
-    >
+    <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto relative" aria-label="Main navigation">
       <ul class="space-y-1">
         <li
           v-for="item in menuItems"
@@ -73,9 +68,7 @@
             v-if="!props.isCollapsed && item.children"
             :class="[
               'overflow-hidden transition-all duration-300 ease-in-out',
-              openSubmenu === item.name
-                ? 'max-h-96 opacity-100'
-                : 'max-h-0 opacity-0',
+              openSubmenu === item.name ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0',
             ]"
           >
             <ul class="pl-8 space-y-1">
@@ -123,98 +116,98 @@
 </template>
 
 <script setup>
-import { ChevronDown } from "lucide-vue-next";
-import { ref, defineProps, reactive, watch } from "vue";
-import { useRoute } from "vue-router";
-import { menuItems } from "@/constants/menu.js";
+import { ChevronDown } from 'lucide-vue-next'
+import { ref, defineProps, reactive, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { menuItems } from '@/constants/menu.js'
 
 const props = defineProps({
   isCollapsed: Boolean,
   isMobileOpen: Boolean,
-});
+})
 
-const route = useRoute();
-const refsMap = reactive({});
-const hoveredItem = ref(null);
-const flyoutStyle = ref({ top: "0px", left: "0px" });
-let hideTimeout = null;
-const isMouseOverFlyout = ref(false);
-const openSubmenu = ref(null);
+const route = useRoute()
+const refsMap = reactive({})
+const hoveredItem = ref(null)
+const flyoutStyle = ref({ top: '0px', left: '0px' })
+let hideTimeout = null
+const isMouseOverFlyout = ref(false)
+const openSubmenu = ref(null)
 
 watch(
   () => route.name,
   () => {
     const parent = menuItems.find((item) =>
-      item.children?.some((child) => child.routeName === route.name)
-    );
+      item.children?.some((child) => child.routeName === route.name),
+    )
     if (parent) {
-      openSubmenu.value = parent.name;
+      openSubmenu.value = parent.name
     } else {
-      openSubmenu.value = null; // 👈 Đóng toàn bộ nếu không còn nằm trong children
+      openSubmenu.value = null // 👈 Đóng toàn bộ nếu không còn nằm trong children
     }
   },
-  { immediate: true }
-);
+  { immediate: true },
+)
 
 const isActive = (item) => {
   if (item.routeName) {
-    return route.name === item.routeName;
+    return route.name === item.routeName
   }
   if (item.children) {
-    return item.children.some((child) => child.routeName === route.name);
+    return item.children.some((child) => child.routeName === route.name)
   }
-  return false;
-};
+  return false
+}
 
 const handleItemClick = (item) => {
   if (item.children) {
     if (!props.isCollapsed) {
-      openSubmenu.value = openSubmenu.value === item.name ? null : item.name;
+      openSubmenu.value = openSubmenu.value === item.name ? null : item.name
     }
   }
-};
+}
 
 const handleMouseEnter = (item) => {
   if (props.isCollapsed && item.children) {
-    clearHideTimeout();
-    hoveredItem.value = item;
+    clearHideTimeout()
+    hoveredItem.value = item
     setTimeout(() => {
-      const triggerEl = refsMap[item.name];
+      const triggerEl = refsMap[item.name]
       if (triggerEl) {
-        const rect = triggerEl.getBoundingClientRect();
+        const rect = triggerEl.getBoundingClientRect()
         flyoutStyle.value = {
           top: `${rect.top}px`,
           left: `${rect.right + 4}px`,
-        };
+        }
       }
-    }, 0);
+    }, 0)
   }
-};
+}
 
 const handleMouseLeave = () => {
   if (props.isCollapsed) {
     hideTimeout = setTimeout(() => {
-      if (!isMouseOverFlyout.value) hoveredItem.value = null;
-    }, 500);
+      if (!isMouseOverFlyout.value) hoveredItem.value = null
+    }, 500)
   }
-};
+}
 
 const clearHideTimeout = () => {
   if (hideTimeout) {
-    clearTimeout(hideTimeout);
-    hideTimeout = null;
+    clearTimeout(hideTimeout)
+    hideTimeout = null
   }
-};
+}
 
 const handleFlyoutMouseEnter = () => {
-  clearHideTimeout();
-  isMouseOverFlyout.value = true;
-};
+  clearHideTimeout()
+  isMouseOverFlyout.value = true
+}
 
 const handleFlyoutMouseLeave = () => {
-  isMouseOverFlyout.value = false;
-  handleMouseLeave();
-};
+  isMouseOverFlyout.value = false
+  handleMouseLeave()
+}
 </script>
 
 <style scoped></style>

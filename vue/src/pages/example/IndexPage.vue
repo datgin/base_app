@@ -49,11 +49,7 @@
           </template>
 
           <template v-if="column.dataIndex === 'published'">
-            <TableSwitchComponent
-              :record="record"
-              :field="column.dataIndex"
-              modelName="Example"
-            />
+            <TableSwitchComponent :record="record" :field="column.dataIndex" modelName="Example" />
           </template>
         </template>
       </a-table>
@@ -62,32 +58,32 @@
 </template>
 
 <script setup>
-import useTable from "@/composables/useTable.js";
-import CardComponent from "@/components/ui/CardComponent.vue";
-import TableSwitchComponent from "@/components/ui/TableSwitchComponent.vue";
+import useTable from '@/composables/useTable.js'
+import CardComponent from '@/components/ui/CardComponent.vue'
+import TableSwitchComponent from '@/components/ui/TableSwitchComponent.vue'
 
-import { ref } from "vue";
+import { ref } from 'vue'
 
-import { BreadcrumbComponent } from "@/components/layout";
-import TableActions from "@/components/ui/TableActions.vue";
+import { BreadcrumbComponent } from '@/components/layout'
+import TableActions from '@/components/ui/TableActions.vue'
 
-const items = ref([{ title: "Example" }]);
+const items = ref([{ title: 'Example' }])
 
 const columns = [
-  { title: "ID", dataIndex: "id", sorter: true, width: "6%" },
-  { title: "image", dataIndex: "image" },
-  { title: "date", dataIndex: "date", sorter: true },
-  { title: "status", dataIndex: "status", sorter: true },
-  { title: "views", dataIndex: "views", sorter: true },
-  { title: "is_active", dataIndex: "is_active", sorter: true },
-  { title: "price (₫)", dataIndex: "price", sorter: true },
-  { title: "published", dataIndex: "published", sorter: true },
-];
+  { title: 'ID', dataIndex: 'id', sorter: true, width: '6%' },
+  { title: 'image', dataIndex: 'image' },
+  { title: 'date', dataIndex: 'date', sorter: true },
+  { title: 'status', dataIndex: 'status', sorter: true },
+  { title: 'views', dataIndex: 'views', sorter: true },
+  { title: 'is_active', dataIndex: 'is_active', sorter: true },
+  { title: 'price (₫)', dataIndex: 'price', sorter: true },
+  { title: 'published', dataIndex: 'published', sorter: true },
+]
 
 const state = ref({
-  modelName: "Example",
-  routeName: "examples.create",
-});
+  modelName: 'Example',
+  routeName: 'examples.create',
+})
 
 const {
   searchText,
@@ -102,9 +98,9 @@ const {
   handleArchiveFilter,
   archive,
 } = useTable({
-  api: "/examples",
+  api: '/examples',
   pageSize: 10,
-});
+})
 </script>
 
 <style lang="scss" scoped></style>

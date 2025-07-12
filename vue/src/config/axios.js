@@ -1,34 +1,34 @@
-import axios from "axios";
-import { useAuthStore } from "@/stores/authStore";
-import router from "@/router";
+import axios from 'axios'
+import { useAuthStore } from '@/stores/authStore'
+import router from '@/router'
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_API_URL + "/api",
-  headers: { "Content-Type": "application/json" },
-});
+  baseURL: import.meta.env.VITE_APP_API_URL + '/api',
+  headers: { 'Content-Type': 'application/json' },
+})
 
 const updateLastActivity = () => {
-  localStorage.setItem("lastActivity", Date.now());
-};
+  localStorage.setItem('lastActivity', Date.now())
+}
 
 const checkInactivity = () => {
-  const lastActivity = localStorage.getItem("lastActivity");
-  const currentTime = Date.now();
+  const lastActivity = localStorage.getItem('lastActivity')
+  const currentTime = Date.now()
   if (lastActivity && currentTime - lastActivity > 15 * 60 * 1000) {
-    console.warn("⚠️ Phiên làm việc hết hạn do không hoạt động");
-    const auth = useAuthStore();
-    auth.logout();
+    console.warn('⚠️ Phiên làm việc hết hạn do không hoạt động')
+    const auth = useAuthStore()
+    auth.logout()
   }
-};
-setInterval(checkInactivity, 60000);
+}
+setInterval(checkInactivity, 60000)
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const auth = useAuthStore();
+    const auth = useAuthStore()
 
     if (auth.token) {
-      updateLastActivity();
-      const currentTime = Date.now();
+      updateLastActivity()
+      const currentTime = Date.now()
 
       // const tokenExpiryTime = new Date(auth.tokenExpiry).toLocaleString(
       //   "vi-VN"
@@ -49,31 +49,31 @@ axiosInstance.interceptors.request.use(
       // );
 
       if (auth.tokenExpiry && currentTime > auth.tokenExpiry - 5 * 60 * 1000) {
-        console.log("🔄 Token sắp hết hạn → đang làm mới...");
-        await auth.refreshToken(); // ⚠️ GỌI AN TOÀN vì dùng axiosRaw bên trong
+        console.log('🔄 Token sắp hết hạn → đang làm mới...')
+        await auth.refreshToken() // ⚠️ GỌI AN TOÀN vì dùng axiosRaw bên trong
       }
 
-      config.headers["Authorization"] = `Bearer ${auth.token}`;
+      config.headers['Authorization'] = `Bearer ${auth.token}`
     }
 
-    return config;
+    return config
   },
-  (error) => Promise.reject(error)
-);
+  (error) => Promise.reject(error),
+)
 
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    const auth = useAuthStore();
+    const auth = useAuthStore()
     if (error.response) {
       if (error.response.status === 401) {
-        auth.logout();
+        auth.logout()
       } else if (error.response.status === 403) {
-        router.push("/forbidden");
+        router.push('/forbidden')
       }
     }
-    return Promise.reject(error);
-  }
-);
+    return Promise.reject(error)
+  },
+)
 
-export default axiosInstance;
+export default axiosInstance

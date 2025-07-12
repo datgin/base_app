@@ -1,15 +1,17 @@
-import { createApp } from "vue";
-import { createPinia } from "pinia";
-import "./style.css";
-import App from "./App.vue";
-import router from "./router";
+import './assets/main.css'
 
-import Antd from "ant-design-vue";
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 
-const app = createApp(App);
+import App from './App.vue'
+import router from './router'
 
-app.use(createPinia());
-app.use(router);
-app.use(Antd);
+import Antd from 'ant-design-vue'
 
-app.mount("#app");
+const app = createApp(App)
+
+app.use(createPinia())
+app.use(router)
+app.use(Antd)
+
+app.mount('#app')

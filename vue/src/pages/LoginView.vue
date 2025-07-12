@@ -7,12 +7,7 @@
       </div>
 
       <form @submit="onSubmit" class="space-y-5">
-        <InputComponent
-          name="email"
-          label="Email"
-          :required="true"
-          placeholder="Nhập email"
-        />
+        <InputComponent name="email" label="Email" :required="true" placeholder="Nhập email" />
 
         <InputComponent
           name="password"
@@ -24,15 +19,9 @@
 
         <div class="flex items-center justify-between">
           <label class="flex items-center space-x-2 text-sm text-gray-600">
-            <InputComponent
-              name="remember"
-              label="Ghi nhớ đăng nhập"
-              typeInput="checkbox"
-            />
+            <InputComponent name="remember" label="Ghi nhớ đăng nhập" typeInput="checkbox" />
           </label>
-          <a href="#" class="text-sm text-blue-600 hover:underline"
-            >Quên mật khẩu?</a
-          >
+          <a href="#" class="text-sm text-blue-600 hover:underline">Quên mật khẩu?</a>
         </div>
 
         <button
@@ -40,11 +29,8 @@
           :disabled="authStore.loading"
           class="w-full bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-medium py-3 rounded-md transition disabled:opacity-50"
         >
-          <Loader2
-            v-if="authStore.loading"
-            class="animate-spin h-5 w-5 inline-block mr-2"
-          />
-          {{ authStore.loading ? "Đang xử lý..." : "Đăng nhập" }}
+          <Loader2 v-if="authStore.loading" class="animate-spin h-5 w-5 inline-block mr-2" />
+          {{ authStore.loading ? 'Đang xử lý...' : 'Đăng nhập' }}
         </button>
       </form>
 
@@ -78,45 +64,43 @@
 
       <div class="mt-6 text-center text-sm text-gray-600">
         Bạn chưa có tài khoản?
-        <a href="/register" class="text-blue-600 hover:underline font-medium"
-          >Đăng ký ngay</a
-        >
+        <a href="/register" class="text-blue-600 hover:underline font-medium">Đăng ký ngay</a>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { Loader2 } from "lucide-vue-next";
-import { useForm } from "vee-validate";
-import * as yup from "yup";
-import InputComponent from "../components/ui/InputComponent.vue";
-import { message } from "ant-design-vue";
-import { useAuthStore } from "@/stores/authStore";
+import { Loader2 } from 'lucide-vue-next'
+import { useForm } from 'vee-validate'
+import * as yup from 'yup'
+import InputComponent from '../components/ui/InputComponent.vue'
+import { message } from 'ant-design-vue'
+import { useAuthStore } from '@/stores/authStore'
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
 const schema = yup.object({
   email: yup.string().required().email(),
   password: yup.string().required().min(8),
   remember: yup.boolean(),
-});
+})
 
 const { handleSubmit } = useForm({
   validationSchema: schema,
-});
+})
 
 const onSubmit = handleSubmit(async (values) => {
   try {
-    await authStore.login(values);
-    message.success("Đăng nhập thành công!");
+    await authStore.login(values)
+    message.success('Đăng nhập thành công!')
   } catch (err) {
-    console.log(err);
-    message.error(authStore.error || "Đăng nhập thất bại");
+    console.log(err)
+    message.error(authStore.error || 'Đăng nhập thất bại')
   }
-});
+})
 
 function handleGoogleLogin() {
-  alert("Chức năng đăng nhập Google sẽ được triển khai");
+  alert('Chức năng đăng nhập Google sẽ được triển khai')
 }
 </script>

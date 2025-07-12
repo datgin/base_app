@@ -15,17 +15,17 @@
 </template>
 
 <script setup>
-import { PlusIcon } from "lucide-vue-next";
-import { useRouter } from "vue-router";
+import { PlusIcon } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
 
 defineProps({
-  title: { type: String, required: true, default: () => "Danh sách" },
+  title: { type: String, required: true, default: () => 'Danh sách' },
   routeNameCreate: { type: String },
-});
+})
 
-const router = useRouter();
+const router = useRouter()
 
 const goBack = () => {
-  router.back(); // ← sẽ quay lại history trước đó
-};
+  router.back() // ← sẽ quay lại history trước đó
+}
 </script>

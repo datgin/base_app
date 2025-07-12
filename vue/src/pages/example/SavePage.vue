@@ -8,18 +8,10 @@
           <CardComponent>
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
               <div class="md:col-span-12">
-                <MediaComponent
-                  label="Thư viện ảnh"
-                  name="albums"
-                  :multiple="true"
-                />
+                <MediaComponent label="Thư viện ảnh" name="albums" :multiple="true" />
               </div>
               <div class="md:col-span-4">
-                <DateComponent
-                  name="date"
-                  label="Ngày"
-                  placeholder="Chọn ngày "
-                />
+                <DateComponent name="date" label="Ngày" placeholder="Chọn ngày " />
               </div>
               <div class="md:col-span-4">
                 <InputComponent
@@ -77,8 +69,8 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
-import { BreadcrumbComponent } from "@/components/layout";
+import { reactive, ref } from 'vue'
+import { BreadcrumbComponent } from '@/components/layout'
 import {
   CardComponent,
   SubmitComponent,
@@ -88,67 +80,57 @@ import {
   InputComponent,
   EditorComponent,
   FormSwitchComponent,
-} from "@/components/ui";
-import { stripHtml } from "@/utils/helpers.js";
-import { useForm } from "vee-validate";
-import * as yup from "yup";
-import useCrud from "@/composables/useCrud.js";
-import { message } from "ant-design-vue";
+} from '@/components/ui'
+import { stripHtml } from '@/utils/helpers.js'
+import { useForm } from 'vee-validate'
+import * as yup from 'yup'
+import useCrud from '@/composables/useCrud.js'
+import { message } from 'ant-design-vue'
 
-const { post, data, meta, loading, error } = useCrud();
+const { post, loading, error } = useCrud()
 
 const state = reactive({
-  title: "Tạo mới Example",
-});
+  title: 'Tạo mới Example',
+})
 
 const options = [
-  { label: "bản nháp", value: "draft" },
-  { label: "được xuất bản", value: "published" },
-  { label: "đã lưu trữ", value: "archived" },
-];
+  { label: 'bản nháp', value: 'draft' },
+  { label: 'được xuất bản', value: 'published' },
+  { label: 'đã lưu trữ', value: 'archived' },
+]
 
 const schema = yup.object({
-  image: yup.string().required("Ảnh nổi bật không được để trống!"),
+  image: yup.string().required('Ảnh nổi bật không được để trống!'),
   albums: yup
     .array()
-    .min(1, "Phải chọn ít nhất 1 ảnh")
-    .required("Thư viện ảnh không được để trông!"),
-  date: yup.string().required("Ngày không được để trống!"),
-  status: yup.string().required("Trạng thái không được để trống!"),
+    .min(1, 'Phải chọn ít nhất 1 ảnh')
+    .required('Thư viện ảnh không được để trông!'),
+  date: yup.string().required('Ngày không được để trống!'),
+  status: yup.string().required('Trạng thái không được để trống!'),
   content: yup
     .string()
-    .test(
-      "is-empty",
-      "Nội dung không được để trống!",
-      (value) => stripHtml(value || "").length > 0
-    )
-    .required("Nội dung không được để trống!"),
-  views: yup
-    .number()
-    .positive("Phải là số dương")
-    .required("Không được bỏ trống"),
+    .test('is-empty', 'Nội dung không được để trống!', (value) => stripHtml(value || '').length > 0)
+    .required('Nội dung không được để trống!'),
+  views: yup.number().positive('Phải là số dương').required('Không được bỏ trống'),
   price: yup.number().min(0).required(),
-  description: yup.string().trim().required("Mô tả không được để trống!"),
-  is_active: yup.boolean().oneOf([true], "Bạn phải bật trạng thái hoạt động!"),
-});
+  description: yup.string().trim().required('Mô tả không được để trống!'),
+  is_active: yup.boolean().oneOf([true], 'Bạn phải bật trạng thái hoạt động!'),
+})
 
 const { handleSubmit } = useForm({
   validationSchema: schema,
-});
+})
 
 const onSubmit = handleSubmit(async (values) => {
   try {
-    await post("/examples", values);
+    await post('/examples', values)
   } catch (err) {
-    console.log(err);
-    message.error(error.value);
+    console.log(err)
+    message.error(error.value)
   }
-});
+})
 
-const items = ref([
-  { title: "Example", routeName: "examples.index" },
-  { title: state.title },
-]);
+const items = ref([{ title: 'Example', routeName: 'examples.index' }, { title: state.title }])
 </script>
 
 <style lang="scss" scoped></style>

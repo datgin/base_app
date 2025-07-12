@@ -1,6 +1,6 @@
-import { ref, computed, watch } from "vue";
-import { message } from "ant-design-vue";
-import axiosInstance from "@/config/axios.js";
+import { ref, computed, watch } from 'vue'
+import { message } from 'ant-design-vue'
+import axiosInstance from '@/config/axios.js'
 
 export default function useTable(options = {}) {
   const {
@@ -11,142 +11,142 @@ export default function useTable(options = {}) {
     enableRowSelection = true,
     enableArchive = true,
     debounceDelay = 500,
-  } = options;
+  } = options
 
-  if (!api || typeof api !== "string") {
-    throw new Error("useTable: 'api' bắt buộc là một string endpoint.");
+  if (!api || typeof api !== 'string') {
+    throw new Error("useTable: 'api' bắt buộc là một string endpoint.")
   }
 
-  const loading = ref(false);
-  const dataSource = ref([]);
-  const total = ref(0);
+  const loading = ref(false)
+  const dataSource = ref([])
+  const total = ref(0)
 
   const pagination = ref({
     current: 1,
     pageSize,
     showSizeChanger: true,
-    pageSizeOptions: ["10", "20", "50", "100"],
+    pageSizeOptions: ['10', '20', '50', '100'],
     showTotal: (total) => `Total ${total} items`,
-  });
+  })
 
-  const filters = ref({ ...defaultParams });
-  const sorter = ref({ field: null, order: null });
-  const selectedRowKeys = ref([]);
-  const searchText = ref("");
-  const archive = ref(1);
+  const filters = ref({ ...defaultParams })
+  const sorter = ref({ field: null, order: null })
+  const selectedRowKeys = ref([])
+  const searchText = ref('')
+  const archive = ref(1)
 
-  let debounceTimeout = null;
+  let debounceTimeout = null
 
   const fetchData = async () => {
-    loading.value = true;
+    loading.value = true
     try {
       const params = {
         page: pagination.value.current,
         per_page: pagination.value.pageSize,
         ...filters.value,
-      };
+      }
 
       if (searchText.value) {
-        params["searchText"] = searchText.value;
+        params['searchText'] = searchText.value
       }
 
       if (archive.value && enableArchive) {
-        params["archive"] = archive.value;
+        params['archive'] = archive.value
       }
 
       if (sorter.value.field && sorter.value.order) {
-        params.sort_field = sorter.value.field;
-        params.sort_order = sorter.value.order === "ascend" ? "asc" : "desc";
+        params.sort_field = sorter.value.field
+        params.sort_order = sorter.value.order === 'ascend' ? 'asc' : 'desc'
       }
 
-      const res = await axiosInstance.get(api, { params });
+      const res = await axiosInstance.get(api, { params })
 
-      const responseData = res.data.data;
+      const responseData = res.data.data
 
-      dataSource.value = responseData.items || [];
-      total.value = responseData.total || 0;
-      pagination.value.total = total.value;
+      dataSource.value = responseData.items || []
+      total.value = responseData.total || 0
+      pagination.value.total = total.value
     } catch (err) {
-      message.error(err.message || "Fetch data failed");
+      message.error(err.message || 'Fetch data failed')
     } finally {
-      loading.value = false;
+      loading.value = false
     }
-  };
+  }
 
   const handleTableChange = (pag, filtersFromTable, sorterFromTable) => {
-    pagination.value.current = pag.current;
-    pagination.value.pageSize = pag.pageSize;
+    pagination.value.current = pag.current
+    pagination.value.pageSize = pag.pageSize
 
     if (sorterFromTable?.field) {
-      sorter.value.field = sorterFromTable.field;
-      sorter.value.order = sorterFromTable.order;
+      sorter.value.field = sorterFromTable.field
+      sorter.value.order = sorterFromTable.order
     } else {
-      sorter.value = { field: null, order: null };
+      sorter.value = { field: null, order: null }
     }
 
-    fetchData();
-  };
+    fetchData()
+  }
 
   const onSearch = (val) => {
-    clearTimeout(debounceTimeout);
+    clearTimeout(debounceTimeout)
     debounceTimeout = setTimeout(() => {
-      pagination.value.current = 1;
-      searchText.value = val;
-      fetchData();
-    }, debounceDelay);
-  };
+      pagination.value.current = 1
+      searchText.value = val
+      fetchData()
+    }, debounceDelay)
+  }
 
   const resetFilters = () => {
-    filters.value = { ...defaultParams };
-    searchText.value = "";
-    archive.value = 1;
-    pagination.value.current = 1;
-    fetchData();
-  };
+    filters.value = { ...defaultParams }
+    searchText.value = ''
+    archive.value = 1
+    pagination.value.current = 1
+    fetchData()
+  }
 
   const handleBulkAction = async (action, modelName) => {
     if (!selectedRowKeys.value.length) {
-      message.warning("Vui lòng chọn ít nhất một mục.");
-      return;
+      message.warning('Vui lòng chọn ít nhất một mục.')
+      return
     }
 
     try {
-      loading.value = true;
+      loading.value = true
 
-      const endpoint = `/bulk/${modelName}/${action}`;
+      const endpoint = `/bulk/${modelName}/${action}`
 
       const response = await axiosInstance.post(endpoint, {
         ids: selectedRowKeys.value,
-      });
+      })
 
-      selectedRowKeys.value = [];
-      fetchData();
-      message.success(response.data.message);
+      selectedRowKeys.value = []
+      fetchData()
+      message.success(response.data.message)
     } catch (err) {
-      console.log(err);
+      console.log(err)
 
-      message.error(err.response.data.message || err.message);
+      message.error(err.response.data.message || err.message)
     } finally {
-      loading.value = false;
+      loading.value = false
     }
-  };
+  }
 
   const handleArchiveFilter = (status) => {
-    archive.value = status;
-    pagination.value.current = 1;
-    fetchData();
-  };
+    archive.value = status
+    pagination.value.current = 1
+    fetchData()
+  }
 
   watch(
     () => pagination.value.pageSize,
     () => {
-      pagination.value.current = 1;
-      fetchData();
-    }
-  );
+      pagination.value.current = 1
+      fetchData()
+    },
+  )
 
   if (!manual) {
-    fetchData();
+    fetchData()
   }
 
   return {
@@ -168,9 +168,9 @@ export default function useTable(options = {}) {
       ? computed(() => ({
           selectedRowKeys: selectedRowKeys.value,
           onChange: (keys) => {
-            selectedRowKeys.value = keys;
+            selectedRowKeys.value = keys
           },
         }))
       : null,
-  };
+  }
 }

@@ -60,12 +60,7 @@
             </CardComponent>
 
             <CardComponent>
-              <DateComponent
-                name="date_range"
-                label="Khoảng ngày"
-                type="date-range"
-                required
-              />
+              <DateComponent name="date_range" label="Khoảng ngày" type="date-range" required />
             </CardComponent>
             <CardComponent>
               <FormSwitchComponent
@@ -84,53 +79,53 @@
 </template>
 
 <script setup>
-import Breadcrumbs from "../components/layout/BreadcrumbComponent.vue";
-import InputComponent from "../components/ui/InputComponent.vue";
-import SubmitComponent from "../components/ui/SubmitComponent.vue";
+import Breadcrumbs from '../components/layout/BreadcrumbComponent.vue'
+import InputComponent from '../components/ui/InputComponent.vue'
+import SubmitComponent from '../components/ui/SubmitComponent.vue'
 
-import CardComponent from "@/components/ui/CardComponent.vue";
+import CardComponent from '@/components/ui/CardComponent.vue'
 
-import SelectComponent from "@/components/ui/SelectComponent.vue";
-import MediaComponent from "@/components/ui/MediaComponent.vue";
+import SelectComponent from '@/components/ui/SelectComponent.vue'
+import MediaComponent from '@/components/ui/MediaComponent.vue'
 
-import { useForm } from "vee-validate";
+import { useForm } from 'vee-validate'
 
 const options = [
-  { label: "Sách", value: "sach" },
-  { label: "Điện tử", value: "dien-tu" },
-  { label: "Thời trang", value: "thoi-trang" },
-];
+  { label: 'Sách', value: 'sach' },
+  { label: 'Điện tử', value: 'dien-tu' },
+  { label: 'Thời trang', value: 'thoi-trang' },
+]
 
-import * as yup from "yup";
-import DateComponent from "../components/ui/DateComponent.vue";
-import FormSwitchComponent from "../components/ui/FormSwitchComponent.vue";
+import * as yup from 'yup'
+import DateComponent from '../components/ui/DateComponent.vue'
+import FormSwitchComponent from '../components/ui/FormSwitchComponent.vue'
 
 const schema = yup.object({
-  attribute_id: yup.mixed().required("Vui lòng chọn thuộc tính"),
-  name: yup.string().required("Vui lòng chọn tên sản phẩm"),
-  image: yup.string().required("Ảnh đại diện là bắt buộc"),
+  attribute_id: yup.mixed().required('Vui lòng chọn thuộc tính'),
+  name: yup.string().required('Vui lòng chọn tên sản phẩm'),
+  image: yup.string().required('Ảnh đại diện là bắt buộc'),
   thumbnails: yup
     .array()
-    .min(1, "Bắt buộc chọn ít nhất 1 ảnh")
-    .required("Ảnh đại diện là bắt buộc"),
-  start_date: yup.string().required("Vui lòng chọn ngày"),
-  end_date: yup.string().required("Vui lòng chọn ngày"),
+    .min(1, 'Bắt buộc chọn ít nhất 1 ảnh')
+    .required('Ảnh đại diện là bắt buộc'),
+  start_date: yup.string().required('Vui lòng chọn ngày'),
+  end_date: yup.string().required('Vui lòng chọn ngày'),
   date_range: yup
     .array()
     .of(yup.string())
-    .length(2, "Vui lòng chọn khoảng ngày")
-    .required("Vui lòng chọn khoảng ngày"),
+    .length(2, 'Vui lòng chọn khoảng ngày')
+    .required('Vui lòng chọn khoảng ngày'),
   is_active: yup
     .boolean()
-    .required("Ảnh đại diện là bắt buộc")
-    .oneOf([true], "Bạn cần bật trạng thái"),
-});
+    .required('Ảnh đại diện là bắt buộc')
+    .oneOf([true], 'Bạn cần bật trạng thái'),
+})
 
 const { handleSubmit } = useForm({
   validationSchema: schema,
-});
+})
 
 const onSubmit = handleSubmit(async (values) => {
-  console.log(values);
-});
+  console.log(values)
+})
 </script>

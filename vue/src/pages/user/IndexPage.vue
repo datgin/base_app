@@ -25,21 +25,21 @@
 </template>
 
 <script setup>
-import useTable from "@/composables/useTable.js";
-import CardComponent from "@/components/ui/CardComponent.vue";
+import useTable from '@/composables/useTable.js'
+import CardComponent from '@/components/ui/CardComponent.vue'
 
-import { ref } from "vue";
+import { ref } from 'vue'
 
-import { BreadcrumbComponent } from "@/components/layout";
-import TableActions from "../../components/ui/TableActions.vue";
+import { BreadcrumbComponent } from '@/components/layout'
+import TableActions from '../../components/ui/TableActions.vue'
 
-const items = ref([{ title: "Khách hàng" }]);
+const items = ref([{ title: 'Khách hàng' }])
 
 const columns = [
-  { title: "ID", dataIndex: "id", sorter: true, width: "6%" },
-  { title: "Name", dataIndex: "name", sorter: true },
-  { title: "Email", dataIndex: "email", sorter: true },
-];
+  { title: 'ID', dataIndex: 'id', sorter: true, width: '6%' },
+  { title: 'Name', dataIndex: 'name', sorter: true },
+  { title: 'Email', dataIndex: 'email', sorter: true },
+]
 
 const {
   searchText,
@@ -53,10 +53,10 @@ const {
   handleBulkAction,
   handleArchiveFilter,
 } = useTable({
-  api: "/users",
+  api: '/users',
   pageSize: 10,
   enableArchive: false,
-});
+})
 </script>
 
 <style lang="scss" scoped></style>

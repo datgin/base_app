@@ -18,9 +18,7 @@
         @click="toggle"
       >
         <span
-          :class="[
-            'absolute top-[4px] bg-white transition-transform rounded-sm shadow',
-          ]"
+          :class="['absolute top-[4px] bg-white transition-transform rounded-sm shadow']"
           :style="{
             width: '20px',
             height: '20px',
@@ -38,32 +36,32 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useField } from "vee-validate";
+import { computed } from 'vue'
+import { useField } from 'vee-validate'
 
 const props = defineProps({
   name: { type: String, required: true },
-  label: { type: String, default: "" },
+  label: { type: String, default: '' },
   required: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
-});
+})
 
-const emit = defineEmits(["update:modelValue", "onChange"]);
+const emit = defineEmits(['update:modelValue', 'onChange'])
 
 // VeeValidate field
 const { value, errorMessage, setTouched } = useField(props.name, undefined, {
   initialValue: true, // mặc định checked khi load
-});
+})
 
 // Trạng thái bật/tắt
-const isChecked = computed(() => !!value.value);
+const isChecked = computed(() => !!value.value)
 
 // Toggle
 function toggle() {
-  if (props.disabled) return;
-  value.value = !isChecked.value;
-  emit("update:modelValue", isChecked.value);
-  emit("onChange", isChecked.value);
-  setTouched(true);
+  if (props.disabled) return
+  value.value = !isChecked.value
+  emit('update:modelValue', isChecked.value)
+  emit('onChange', isChecked.value)
+  setTouched(true)
 }
 </script>

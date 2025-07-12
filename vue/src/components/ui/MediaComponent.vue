@@ -38,10 +38,7 @@
               class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 transition"
             >
               <Eye class="w-5 h-5 text-white" @click.stop="handleView(idx)" />
-              <Trash2
-                class="w-5 h-5 text-white"
-                @click.stop="handleDelete(idx)"
-              />
+              <Trash2 class="w-5 h-5 text-white" @click.stop="handleDelete(idx)" />
             </div>
           </div>
         </template>
@@ -61,10 +58,7 @@
               class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center gap-2 transition"
             >
               <Eye class="w-5 h-5 text-white" @click.stop="handleView(0)" />
-              <Trash2
-                class="w-5 h-5 text-white"
-                @click.stop="handleDelete(0)"
-              />
+              <Trash2 class="w-5 h-5 text-white" @click.stop="handleDelete(0)" />
             </div>
           </div>
         </template>
@@ -72,12 +66,7 @@
 
       <!-- Khi chưa có ảnh -->
       <div v-else class="flex flex-col items-center gap-1">
-        <svg
-          class="w-10 h-10 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -115,80 +104,80 @@
 </template>
 
 <script setup>
-import { useField } from "vee-validate";
-import { ref, watch, computed } from "vue";
-import { Eye, Trash2 } from "lucide-vue-next";
-import VueEasyLightbox from "vue-easy-lightbox";
-import MediaPopupComponent from "./MediaPopupComponent.vue";
+import { useField } from 'vee-validate'
+import { ref, watch, computed } from 'vue'
+import { Eye, Trash2 } from 'lucide-vue-next'
+import VueEasyLightbox from 'vue-easy-lightbox'
+import MediaPopupComponent from './MediaPopupComponent.vue'
 
 const props = defineProps({
   multiple: { type: Boolean, default: false },
   modelValue: { type: [Array, String], default: () => [] },
   name: { type: String, required: true },
-  label: { type: String, default: "" },
+  label: { type: String, default: '' },
   required: { type: Boolean, default: false },
-});
+})
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue'])
 
 // 🎯 Tích hợp useField
-const { value, errorMessage, setTouched } = useField(props.name);
+const { value, errorMessage, setTouched } = useField(props.name)
 
 // Đồng bộ kiểu dữ liệu
 watch(value, (newVal) => {
   if (props.multiple) {
     if (!Array.isArray(newVal)) {
-      value.value = [];
+      value.value = []
     }
   } else {
     if (Array.isArray(newVal)) {
-      value.value = "";
+      value.value = ''
     }
   }
-  emit("update:modelValue", newVal);
-});
+  emit('update:modelValue', newVal)
+})
 
 // Xử lý upload, delete, view logic
-const isOpen = ref(false);
-const previewVisible = ref(false);
-const previewIndex = ref(0);
+const isOpen = ref(false)
+const previewVisible = ref(false)
+const previewIndex = ref(0)
 
 const hasValue = computed(() => {
-  return props.multiple ? (value.value ?? []).length > 0 : !!value.value;
-});
+  return props.multiple ? (value.value ?? []).length > 0 : !!value.value
+})
 
 function openPopup() {
-  isOpen.value = true;
+  isOpen.value = true
 }
 
 function handleView(idx) {
-  previewIndex.value = idx;
-  previewVisible.value = true;
+  previewIndex.value = idx
+  previewVisible.value = true
 }
 
 function handleDelete(idx) {
   if (props.multiple) {
-    const temp = [...value.value];
-    temp.splice(idx, 1);
-    value.value = temp;
+    const temp = [...value.value]
+    temp.splice(idx, 1)
+    value.value = temp
   } else {
-    value.value = "";
+    value.value = ''
   }
 }
 
 function handleSelect(selected) {
-  const selectedUrls = selected.map((img) => img.path);
+  const selectedUrls = selected.map((img) => img.path)
 
   if (props.multiple) {
-    const currentValue = Array.isArray(value.value) ? value.value : [];
-    const uniqueUrls = Array.from(new Set([...currentValue, ...selectedUrls]));
-    value.value = uniqueUrls;
+    const currentValue = Array.isArray(value.value) ? value.value : []
+    const uniqueUrls = Array.from(new Set([...currentValue, ...selectedUrls]))
+    value.value = uniqueUrls
   } else {
-    value.value = selected[0]?.path ?? "";
+    value.value = selected[0]?.path ?? ''
   }
 
-  isOpen.value = false;
-  setTouched(true);
+  isOpen.value = false
+  setTouched(true)
 }
 </script>
 

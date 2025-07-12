@@ -28,12 +28,12 @@
 </template>
 
 <script setup>
-import CardComponent from "@/components/ui/CardComponent.vue";
-import { Save, LogOut, Loader2 } from "lucide-vue-next";
+import CardComponent from '@/components/ui/CardComponent.vue'
+import { Save, LogOut, Loader2 } from 'lucide-vue-next'
 
 const props = defineProps({
   loading: { type: Boolean, default: false },
-});
+})
 </script>
 
 <style lang="scss" scoped></style>

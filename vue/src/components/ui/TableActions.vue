@@ -62,9 +62,7 @@
 
       <!-- Search -->
       <div class="relative flex-1 max-w-sm">
-        <div
-          class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-        >
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <SearchIcon class="h-4 w-4 text-gray-400" />
         </div>
         <input
@@ -80,7 +78,7 @@
     <!-- Right: Create + Reload -->
     <div class="flex items-center gap-3">
       <router-link
-      v-if="routeName"
+        v-if="routeName"
         :to="{ name: routeName }"
         @click="emits('create')"
         class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-700 border border-transparent rounded hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -101,81 +99,69 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
-import {
-  ChevronDownIcon,
-  SearchIcon,
-  PlusIcon,
-  RotateCcwIcon,
-  ArrowLeft,
-} from "lucide-vue-next";
-import { useRouter } from "vue-router";
-import { Modal } from "ant-design-vue";
+import { ref, watchEffect } from 'vue'
+import { ChevronDownIcon, SearchIcon, PlusIcon, RotateCcwIcon, ArrowLeft } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
+import { Modal } from 'ant-design-vue'
 
-const router = useRouter();
+const router = useRouter()
 
 // Props
 const props = defineProps({
-  searchText: { type: String, default: "" },
+  searchText: { type: String, default: '' },
   archive: { type: Number, default: 1 },
   modelName: { type: String },
   routeName: { type: String },
-});
+})
 
 // Emits
-const emits = defineEmits([
-  "search",
-  "create",
-  "reload",
-  "bulk-action",
-  "filter-archive",
-]);
+const emits = defineEmits(['search', 'create', 'reload', 'bulk-action', 'filter-archive'])
 
-const showBulkActions = ref(false);
-const localSearchText = ref(props.searchText);
-const localArchive = ref(props.archive);
+const showBulkActions = ref(false)
+const localSearchText = ref(props.searchText)
+const localArchive = ref(props.archive)
 
-const archiveFilter = ref(null);
+const archiveFilter = ref(null)
 
 const toggleBulkActions = () => {
-  showBulkActions.value = !showBulkActions.value;
-};
+  showBulkActions.value = !showBulkActions.value
+}
 
 const handleBulkAction = (action) => {
-  let actionText = "";
-  if (action === "delete") actionText = "xoá";
-  else if (action === "archive") actionText = "lưu trữ";
-  else if (action === "publish") actionText = "thay đổi trạng thái";
+  let actionText = ''
+  if (action === 'delete') actionText = 'xoá'
+  else if (action === 'archive') actionText = 'lưu trữ'
+  else if (action === 'publish') actionText = 'thay đổi trạng thái'
 
   Modal.confirm({
-    title: "Xác nhận hành động",
+    title: 'Xác nhận hành động',
     content: `Bạn có chắc chắn muốn ${actionText} các mục đã chọn không?`,
-    okText: "Xác nhận",
-    cancelText: "Huỷ",
-    okType: action === "delete" ? "danger" : "primary",
+    okText: 'Xác nhận',
+    cancelText: 'Huỷ',
+    okType: action === 'delete' ? 'danger' : 'primary',
     centered: true,
     onOk() {
-      emits("bulk-action", action, props.modelName);
-      showBulkActions.value = false;
+      emits('bulk-action', action, props.modelName)
+      showBulkActions.value = false
     },
-  });
-};
+  })
+}
 
 const onChangeArchiveFilter = (value) => {
-  archiveFilter.value = value;
-  emits("filter-archive", value); // emit lên component cha
-};
+  archiveFilter.value = value
+  emits('filter-archive', value) // emit lên component cha
+}
 
 const onSearchInput = () => {
-  emits("search", localSearchText.value);
-}; // Theo dõi khi props thay đổi (ví dụ khi reset từ cha)
+  emits('search', localSearchText.value)
+} // Theo dõi khi props thay đổi (ví dụ khi reset từ cha)
 
 watchEffect(() => {
-  localSearchText.value = props.searchText;
-  localArchive.value = props.archive;
-});
+  localSearchText.value = props.searchText
+  localArchive.value = props.archive
+})
 
 const goBack = () => {
-  router.back(); // ← sẽ quay lại history trước đó
-};
+  router.back() // ← sẽ quay lại history trước đó
+}
 </script>

@@ -5,12 +5,7 @@
       <span v-if="required" class="text-red-500">*</span>
     </label>
 
-    <QuillEditor
-      v-model:content="value"
-      toolbar="full"
-      theme="snow"
-      content-type="html"
-    />
+    <QuillEditor v-model:content="value" toolbar="full" theme="snow" content-type="html" />
 
     <span v-if="errorMessage" class="text-red-500 text-sm mt-1 block">
       {{ errorMessage }}
@@ -19,9 +14,9 @@
 </template>
 
 <script setup>
-import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import { QuillEditor } from "@vueup/vue-quill";
-import { useField } from "vee-validate";
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import { QuillEditor } from '@vueup/vue-quill'
+import { useField } from 'vee-validate'
 
 // Props
 const props = defineProps({
@@ -35,7 +30,7 @@ const props = defineProps({
   },
   labelClass: {
     type: String,
-    default: "mb-1 block text-sm font-medium text-gray-900",
+    default: 'mb-1 block text-sm font-medium text-gray-900',
   },
   name: {
     type: String,
@@ -43,12 +38,12 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: "",
+    default: '',
   },
-});
+})
 
 // Vee-validate useField
-const { value, errorMessage } = useField(props.name);
+const { value, errorMessage } = useField(props.name)
 </script>
 
 <style>

@@ -9,11 +9,7 @@
       ]"
       aria-label="User menu"
     >
-      <img
-        src="https://placehold.co/400"
-        alt="Avatar"
-        class="w-full h-full object-cover"
-      />
+      <img src="https://placehold.co/400" alt="Avatar" class="w-full h-full object-cover" />
     </button>
 
     <!-- Dropdown Menu -->
@@ -38,10 +34,10 @@
           />
           <div class="flex flex-col">
             <span class="text-sm font-medium text-gray-800 truncate">
-              {{ authStore.user?.name || "Đang tải..." }}
+              {{ authStore.user?.name || 'Đang tải...' }}
             </span>
             <span class="text-xs text-gray-500 truncate">
-              {{ authStore.user?.email || "" }}
+              {{ authStore.user?.email || '' }}
             </span>
           </div>
         </div>
@@ -73,37 +69,37 @@
 </template>
 
 <script setup>
-import { SquareUser, LogOut } from "lucide-vue-next";
-import { onMounted, ref } from "vue";
-import { useRouter, RouterLink } from "vue-router";
-import { useAuthStore } from "@/stores/authStore";
+import { SquareUser, LogOut } from 'lucide-vue-next'
+import { onMounted, ref } from 'vue'
+import { useRouter, RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
-const emit = defineEmits(["toggleMenu"]);
-const props = defineProps({ isOpen: { type: Boolean, required: true } });
-const menuRef = ref(null);
-defineExpose({ menuRef });
+const emit = defineEmits(['toggleMenu'])
+const props = defineProps({ isOpen: { type: Boolean, required: true } })
+const menuRef = ref(null)
+defineExpose({ menuRef })
 
-const authStore = useAuthStore();
-const router = useRouter();
+const authStore = useAuthStore()
+const router = useRouter()
 
-const isActive = ref(false);
+const isActive = ref(false)
 
 const handleClick = () => {
-  isActive.value = true;
+  isActive.value = true
   setTimeout(() => {
-    isActive.value = false;
-  }, 150);
-  emit("toggleMenu");
-};
+    isActive.value = false
+  }, 150)
+  emit('toggleMenu')
+}
 
 const handleLogout = async () => {
-  await authStore.logout();
-  router.push("/admin/login");
-};
+  await authStore.logout()
+  router.push('/admin/login')
+}
 
 onMounted(async () => {
   if (authStore.token && !authStore.user) {
-    await authStore.getUser();
+    await authStore.getUser()
   }
-});
+})
 </script>

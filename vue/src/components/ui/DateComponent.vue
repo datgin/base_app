@@ -42,92 +42,92 @@
 </template>
 
 <script setup>
-import { useField } from "vee-validate";
-import { ref, watch } from "vue";
-import dayjs from "dayjs";
-import isEqual from "lodash/isEqual";
+import { useField } from 'vee-validate'
+import { ref, watch } from 'vue'
+import dayjs from 'dayjs'
+import isEqual from 'lodash/isEqual'
 
 // Props
 const props = defineProps({
-  type: { type: String, default: "date" }, // 'date', 'datetime', 'range-date', 'range-datetime'
+  type: { type: String, default: 'date' }, // 'date', 'datetime', 'range-date', 'range-datetime'
   required: { type: [Boolean, String], default: false },
-  label: { type: String, default: "" },
+  label: { type: String, default: '' },
   labelClass: {
     type: String,
-    default: "mb-1 block text-sm font-medium text-gray-900",
+    default: 'mb-1 block text-sm font-medium text-gray-900',
   },
   name: { type: String, required: true },
-  className: { type: String, default: "w-full" },
-  size: { type: String, default: "large" },
-  placeholder: { type: String, default: "Vui lòng chọn thời gian" },
+  className: { type: String, default: 'w-full' },
+  size: { type: String, default: 'large' },
+  placeholder: { type: String, default: 'Vui lòng chọn thời gian' },
   rangePlaceholder: {
     type: Array,
-    default: () => ["Chọn bắt đầu", "Chọn kết thúc"],
+    default: () => ['Chọn bắt đầu', 'Chọn kết thúc'],
   },
-  format: { type: String, default: "DD/MM/YYYY" },
-});
+  format: { type: String, default: 'DD/MM/YYYY' },
+})
 
 // Emits
-const emits = defineEmits(["onChange"]);
+const emits = defineEmits(['onChange'])
 
 // VeeValidate
-const { value, errorMessage } = useField(props.name);
+const { value, errorMessage } = useField(props.name)
 
 // Inner value để binding với Ant Design Picker
-const innerValue = ref(null);
+const innerValue = ref(null)
 
 // Đồng bộ innerValue -> value
 watch(
   innerValue,
   (newVal) => {
-    let formattedValue;
+    let formattedValue
 
-    if (props.type === "date" || props.type === "datetime") {
-      formattedValue = newVal ? dayjs(newVal).format(props.format) : "";
-    } else if (props.type === "range-date" || props.type === "range-datetime") {
+    if (props.type === 'date' || props.type === 'datetime') {
+      formattedValue = newVal ? dayjs(newVal).format(props.format) : ''
+    } else if (props.type === 'range-date' || props.type === 'range-datetime') {
       formattedValue =
         Array.isArray(newVal) && newVal.length === 2
-          ? newVal.map((d) => (d ? dayjs(d).format(props.format) : ""))
-          : [];
+          ? newVal.map((d) => (d ? dayjs(d).format(props.format) : ''))
+          : []
     } else {
-      formattedValue = newVal;
+      formattedValue = newVal
     }
 
     if (!isEqual(value.value, formattedValue)) {
-      value.value = formattedValue;
+      value.value = formattedValue
     }
   },
-  { deep: true }
-);
+  { deep: true },
+)
 
 // Đồng bộ value -> innerValue (VD: reset form)
 watch(
   value,
   (newVal) => {
-    let parsedValue;
+    let parsedValue
 
-    if (props.type === "date" || props.type === "datetime") {
-      parsedValue = newVal ? dayjs(newVal, props.format) : null;
-    } else if (props.type === "range-date" || props.type === "range-datetime") {
+    if (props.type === 'date' || props.type === 'datetime') {
+      parsedValue = newVal ? dayjs(newVal, props.format) : null
+    } else if (props.type === 'range-date' || props.type === 'range-datetime') {
       parsedValue =
         Array.isArray(newVal) && newVal.length === 2
           ? newVal.map((d) => (d ? dayjs(d, props.format) : null))
-          : [];
+          : []
     } else {
-      parsedValue = newVal;
+      parsedValue = newVal
     }
 
     if (!isEqual(innerValue.value, parsedValue)) {
-      innerValue.value = parsedValue;
+      innerValue.value = parsedValue
     }
   },
-  { immediate: true }
-);
+  { immediate: true },
+)
 
 // Emit onChange khi user change
 const handleChange = (val) => {
-  emits("onChange", val);
-};
+  emits('onChange', val)
+}
 </script>
 
 <style scoped></style>

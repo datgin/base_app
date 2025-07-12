@@ -11,7 +11,7 @@
         v-if="unreadCount > 0"
         class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse"
       >
-        {{ unreadCount > 9 ? "9+" : unreadCount }}
+        {{ unreadCount > 9 ? '9+' : unreadCount }}
       </span>
     </button>
 
@@ -59,10 +59,7 @@
               class="w-10 h-10 rounded-full flex items-center justify-center mr-3"
               :class="getNotificationIconClass(notification.type)"
             >
-              <component
-                :is="getNotificationIcon(notification.type)"
-                class="w-5 h-5"
-              />
+              <component :is="getNotificationIcon(notification.type)" class="w-5 h-5" />
             </div>
 
             <div class="flex-1 min-w-0">
@@ -100,90 +97,80 @@
 </template>
 
 <script setup>
-import {
-  Bell,
-  Clock,
-  MessageCircle,
-  Heart,
-  Gift,
-  AlertCircle,
-  CheckCircle,
-} from "lucide-vue-next";
-import { ref, computed } from "vue";
+import { Bell, Clock, MessageCircle, Heart, Gift, AlertCircle, CheckCircle } from 'lucide-vue-next'
+import { ref, computed } from 'vue'
 
-const notificationRef = ref(null);
+const notificationRef = ref(null)
 
-defineExpose({ notificationRef });
+defineExpose({ notificationRef })
 
-const emit = defineEmits(["closeNotification"]);
+defineEmits(['closeNotification'])
 
 const props = defineProps({
   isNotificationOpen: { type: Boolean, required: true },
-});
+})
 
 const notifications = ref([
   {
     id: 1,
-    type: "order",
-    title: "Your order is placed",
-    message: "If several languages coalesce the grammar",
-    time: "3 min ago",
+    type: 'order',
+    title: 'Your order is placed',
+    message: 'If several languages coalesce the grammar',
+    time: '3 min ago',
     read: false,
   },
   {
     id: 2,
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    title: "James Lemire",
-    message: "It will seem like simplified English.",
-    time: "1 hour ago",
+    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    title: 'James Lemire',
+    message: 'It will seem like simplified English.',
+    time: '1 hour ago',
     read: false,
   },
   {
     id: 3,
-    type: "shipped",
-    title: "Your item is shipped",
-    message: "If several languages coalesce the grammar",
-    time: "2 hours ago",
+    type: 'shipped',
+    title: 'Your item is shipped',
+    message: 'If several languages coalesce the grammar',
+    time: '2 hours ago',
     read: true,
   },
   {
     id: 4,
-    type: "shipped",
-    title: "Your item is shipped",
-    message: "If several languages coalesce the grammar",
-    time: "2 hours ago",
+    type: 'shipped',
+    title: 'Your item is shipped',
+    message: 'If several languages coalesce the grammar',
+    time: '2 hours ago',
     read: true,
   },
   {
     id: 5,
-    type: "shipped",
-    title: "Your item is shipped",
-    message: "If several languages coalesce the grammar",
-    time: "2 hours ago",
+    type: 'shipped',
+    title: 'Your item is shipped',
+    message: 'If several languages coalesce the grammar',
+    time: '2 hours ago',
     read: true,
   },
   {
     id: 6,
-    type: "shipped",
-    title: "Your item is shipped",
-    message: "If several languages coalesce the grammar",
-    time: "2 hours ago",
+    type: 'shipped',
+    title: 'Your item is shipped',
+    message: 'If several languages coalesce the grammar',
+    time: '2 hours ago',
     read: true,
   },
-]);
+])
 
 const markAsRead = (id) => {
-  const notification = notifications.value.find((n) => n.id === id);
+  const notification = notifications.value.find((n) => n.id === id)
   if (notification) {
-    notification.read = true;
+    notification.read = true
   }
-};
+}
 
-const unreadCount = computed(
-  () => notifications.value.filter((n) => !n.read).length
-);
+const unreadCount = computed(() => notifications.value.filter((n) => !n.read).length)
 
-const markAllAsRead = () => notifications.value.forEach((n) => (n.read = true));
+const markAllAsRead = () => notifications.value.forEach((n) => (n.read = true))
 
 const getNotificationIcon = (type) => {
   const icons = {
@@ -192,20 +179,20 @@ const getNotificationIcon = (type) => {
     alert: AlertCircle,
     message: MessageCircle,
     like: Heart,
-  };
-  return icons[type] || Bell;
-};
+  }
+  return icons[type] || Bell
+}
 
 const getNotificationIconClass = (type) => {
   const classes = {
-    order: "bg-blue-100 text-blue-600",
-    shipped: "bg-green-100 text-green-600",
-    alert: "bg-yellow-100 text-yellow-600",
-    message: "bg-blue-100 text-blue-600",
-    like: "bg-pink-100 text-pink-600",
-  };
-  return classes[type] || "bg-gray-100 text-gray-600";
-};
+    order: 'bg-blue-100 text-blue-600',
+    shipped: 'bg-green-100 text-green-600',
+    alert: 'bg-yellow-100 text-yellow-600',
+    message: 'bg-blue-100 text-blue-600',
+    like: 'bg-pink-100 text-pink-600',
+  }
+  return classes[type] || 'bg-gray-100 text-gray-600'
+}
 </script>
 
 <style scoped>

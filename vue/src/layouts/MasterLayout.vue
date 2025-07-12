@@ -36,54 +36,54 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from 'vue'
 
-import AsideComponent from "@/components/layout/AsideComponent.vue";
-import HeaderComponent from "@/components/layout/HeaderComponent.vue";
+import AsideComponent from '@/components/layout/AsideComponent.vue'
+import HeaderComponent from '@/components/layout/HeaderComponent.vue'
 
-const isCollapsed = ref(false);
-const isMobileOpen = ref(false);
-const openSubmenu = ref(null);
+const isCollapsed = ref(false)
+const isMobileOpen = ref(false)
+const openSubmenu = ref(null)
 
 const toggleCollapse = () => {
-  isCollapsed.value = !isCollapsed.value;
+  isCollapsed.value = !isCollapsed.value
 
   if (isCollapsed.value) {
-    openSubmenu.value = null;
+    openSubmenu.value = null
   }
-};
+}
 
 const openMobileSidebar = () => {
-  isMobileOpen.value = true;
-};
+  isMobileOpen.value = true
+}
 
 const closeMobileSidebar = () => {
-  isMobileOpen.value = false;
-};
+  isMobileOpen.value = false
+}
 
 const toggleSubmenu = (menuName) => {
-  if (isCollapsed.value) return;
+  if (isCollapsed.value) return
 
   // Chỉ cho phép mở một submenu tại một thời điểm
   if (openSubmenu.value === menuName) {
-    openSubmenu.value = null;
+    openSubmenu.value = null
   } else {
-    openSubmenu.value = menuName;
+    openSubmenu.value = menuName
   }
-};
+}
 
 // Handle window resize
 const handleResize = () => {
   if (window.innerWidth >= 1024) {
-    isMobileOpen.value = false;
+    isMobileOpen.value = false
   }
-};
+}
 
 onMounted(() => {
-  window.addEventListener("resize", handleResize);
-});
+  window.addEventListener('resize', handleResize)
+})
 
 onUnmounted(() => {
-  window.removeEventListener("resize", handleResize);
-});
+  window.removeEventListener('resize', handleResize)
+})
 </script>

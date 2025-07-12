@@ -4,17 +4,17 @@
  * - Redirects to /admin if already logged in and trying to access /admin/login
  */
 export default function authGuard(to, from, next) {
-  const isLoggedIn = !!localStorage.getItem("token");
+  const isLoggedIn = !!localStorage.getItem('token')
 
   // Chặn vào login nếu đã đăng nhập
-  if (to.name === "login" && isLoggedIn) {
-    return next("/admin");
+  if (to.name === 'login' && isLoggedIn) {
+    return next('/admin')
   }
 
   // Chặn vào các route admin nếu chưa đăng nhập
-  if (to.path.startsWith("/admin") && to.name !== "login" && !isLoggedIn) {
-    return next("/admin/login");
+  if (to.path.startsWith('/admin') && to.name !== 'login' && !isLoggedIn) {
+    return next('/admin/login')
   }
 
-  next();
+  next()
 }

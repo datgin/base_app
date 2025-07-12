@@ -6,12 +6,8 @@
     >
       <div class="bg-white rounded-lg shadow-lg w-full h-full flex flex-col">
         <!-- Header -->
-        <div
-          class="flex items-center justify-between px-4 py-4 border-b border-gray-200"
-        >
-          <h2
-            class="font-medium text-gray-700 text-2xl flex items-center gap-2"
-          >
+        <div class="flex items-center justify-between px-4 py-4 border-b border-gray-200">
+          <h2 class="font-medium text-gray-700 text-2xl flex items-center gap-2">
             📁 Thư viện ảnh
           </h2>
           <button
@@ -67,9 +63,7 @@
                 </button>
               </div>
               <div class="relative w-full md:w-80 md:ml-auto">
-                <span
-                  class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"
-                >
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5"
@@ -107,9 +101,7 @@
 
               <!-- Hiển thị khi có ảnh -->
               <div v-else>
-                <div
-                  class="p-4 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3"
-                >
+                <div class="p-4 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
                   <div
                     v-for="(image, index) in images"
                     :key="index"
@@ -126,9 +118,7 @@
                         class="absolute inset-0 object-contain w-full h-full"
                       />
                     </div>
-                    <div
-                      class="my-1 px-1 text-sm text-center text-gray-700 truncate"
-                    >
+                    <div class="my-1 px-1 text-sm text-center text-gray-700 truncate">
                       {{ image.name }}
                     </div>
                     <div
@@ -157,9 +147,7 @@
           </div>
 
           <!-- Right: Info Panel -->
-          <div
-            class="hidden lg:flex w-[300px] border-l border-gray-200 p-4 flex-col"
-          >
+          <div class="hidden lg:flex w-[300px] border-l border-gray-200 p-4 flex-col">
             <div class="overflow-y-auto max-h-[60vh] w-full">
               <div v-if="selectedImages.length">
                 <div
@@ -186,9 +174,7 @@
                       {{ selectedImages[selectedImages.length - 1].path }}
                     </span>
                     <button
-                      @click="
-                        copyUrl(selectedImages[selectedImages.length - 1].path)
-                      "
+                      @click="copyUrl(selectedImages[selectedImages.length - 1].path)"
                       class="text-blue-500 hover:text-blue-700 cursor-pointer"
                     >
                       <Copy class="w-4 h-4" />
@@ -232,165 +218,154 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { debounce } from "@/utils/helpers.js";
-import {
-  XIcon,
-  ImageUp,
-  CheckCircle,
-  Trash,
-  Copy,
-  ImageDown,
-} from "lucide-vue-next";
-import { message, Modal } from "ant-design-vue";
-import axios from "@/config/axios";
-import useCrud from "@/composables/useCrud.js";
+import { onMounted, ref } from 'vue'
+import { debounce } from '@/utils/helpers.js'
+import { XIcon, ImageUp, CheckCircle, Trash, Copy, ImageDown } from 'lucide-vue-next'
+import { message, Modal } from 'ant-design-vue'
+import axios from '@/config/axios'
+import useCrud from '@/composables/useCrud.js'
 
-const { uploadMultipart, getList, data, loading } = useCrud();
+const { uploadMultipart, getList, data, loading } = useCrud()
 
 const props = defineProps({
   multiple: { type: Boolean, default: false },
   isOpen: { type: Boolean, default: false },
-});
+})
 
-const fileInput = ref(null);
-const total = ref(0);
-const images = ref([]);
-const currentPage = ref(1);
-const pageSize = ref(20);
-const searchText = ref(null);
+const fileInput = ref(null)
+const total = ref(0)
+const images = ref([])
+const currentPage = ref(1)
+const pageSize = ref(20)
+const searchText = ref(null)
 
 function triggerFileInput() {
-  fileInput.value?.click();
+  fileInput.value?.click()
 }
 
 async function handleFileUpload(event) {
-  const files = Array.from(event.target.files);
+  const files = Array.from(event.target.files)
 
-  if (files.length === 0) return;
+  if (files.length === 0) return
 
   if (files.length > 10) {
-    message.error("Chỉ được chọn tối đa 10 ảnh");
-    return;
+    message.error('Chỉ được chọn tối đa 10 ảnh')
+    return
   }
 
-  const oversize = files.find((file) => file.size > 10 * 1024 * 1024);
+  const oversize = files.find((file) => file.size > 10 * 1024 * 1024)
   if (oversize) {
-    message.error("Mỗi ảnh phải nhỏ hơn 10MB");
-    return;
+    message.error('Mỗi ảnh phải nhỏ hơn 10MB')
+    return
   }
 
   try {
-    await uploadMultipart("/media/upload", { images: files });
-    fetchImages();
-    message.success("Tải ảnh thành công");
+    await uploadMultipart('/media/upload', { images: files })
+    fetchImages()
+    message.success('Tải ảnh thành công')
   } catch (error) {
-    console.error("Lỗi upload:", error);
-    message.error("Tải ảnh thất bại");
+    console.error('Lỗi upload:', error)
+    message.error('Tải ảnh thất bại')
   } finally {
-    fileInput.value.value = "";
+    fileInput.value.value = ''
   }
 }
 
 async function handleDelete() {
   if (selectedImages.value.length === 0) {
-    message.warning("Bạn chưa chọn ảnh nào để xoá");
-    return;
+    message.warning('Bạn chưa chọn ảnh nào để xoá')
+    return
   }
 
   Modal.confirm({
-    title: "Xác nhận xoá ảnh",
+    title: 'Xác nhận xoá ảnh',
     content: `Bạn có chắc chắn muốn xoá ${selectedImages.value.length} ảnh đã chọn?`,
-    okText: "Xoá",
-    okType: "danger",
-    cancelText: "Huỷ",
+    okText: 'Xoá',
+    okType: 'danger',
+    cancelText: 'Huỷ',
     async onOk() {
       try {
-        const ids = selectedImages.value.map((img) => img.id);
-        await axios.delete("/media/destroy", { data: { ids } });
-        selectedImages.value = [];
-        await fetchImages();
-        message.success("Xoá ảnh thành công");
+        const ids = selectedImages.value.map((img) => img.id)
+        await axios.delete('/media/destroy', { data: { ids } })
+        selectedImages.value = []
+        await fetchImages()
+        message.success('Xoá ảnh thành công')
       } catch (error) {
-        console.error("Lỗi khi xoá ảnh:", error);
-        message.error("Xoá ảnh thất bại");
+        console.error('Lỗi khi xoá ảnh:', error)
+        message.error('Xoá ảnh thất bại')
       }
     },
-  });
+  })
 }
 
 const debouncedSearch = debounce(() => {
-  fetchImages(1, pageSize.value); // reset về page 1, giữ nguyên pageSize
-}, 400);
+  fetchImages(1, pageSize.value) // reset về page 1, giữ nguyên pageSize
+}, 400)
 
-const emit = defineEmits(["close", "select"]);
+const emit = defineEmits(['close', 'select'])
 
 const fetchImages = async (page = 1, perPage = pageSize.value) => {
   try {
-    await getList("/media", {
+    await getList('/media', {
       page,
       per_page: perPage,
       searchText: searchText.value,
-    });
+    })
 
-    images.value = data.value.items;
-    total.value = data.value.total;
-    currentPage.value = page;
+    images.value = data.value.items
+    total.value = data.value.total
+    currentPage.value = page
   } catch (e) {
-    console.log(e);
-    message.error("Không thể tải danh sách ảnh");
+    console.log(e)
+    message.error('Không thể tải danh sách ảnh')
   }
-};
+}
 
 function onPageChange(page, perPage) {
-  pageSize.value = perPage;
-  fetchImages(page, perPage);
+  pageSize.value = perPage
+  fetchImages(page, perPage)
 }
 
 onMounted(() => {
-  fetchImages();
-});
+  fetchImages()
+})
 
-const selectedImages = ref([]);
+const selectedImages = ref([])
 
 function toggleSelect(image) {
   if (props.multiple) {
-    const index = selectedImages.value.findIndex(
-      (img) => img.path === image.path
-    );
+    const index = selectedImages.value.findIndex((img) => img.path === image.path)
 
     if (index !== -1) {
-
-      selectedImages.value.splice(index, 1);
+      selectedImages.value.splice(index, 1)
     } else {
-
-      selectedImages.value.push(image);
+      selectedImages.value.push(image)
     }
   } else {
-    selectedImages.value = [image];
+    selectedImages.value = [image]
   }
 }
 
 function isSelected(image) {
-  return selectedImages.value.some((img) => img.path === image.path);
+  return selectedImages.value.some((img) => img.path === image.path)
 }
 
 function copyUrl(path) {
   navigator.clipboard
     .writeText(path)
     .then(() => {
-      message.success("Sao chép thành công đường dẫn");
+      message.success('Sao chép thành công đường dẫn')
     })
     .catch((err) => {
-      console.error("Lỗi khi copy:", err);
-    });
+      console.error('Lỗi khi copy:', err)
+    })
 }
 
 function confirmSelection() {
   if (props.multiple) {
-    emit("select", selectedImages.value);
+    emit('select', selectedImages.value)
   } else {
-    emit("select", [selectedImages.value[0]]); // Trả về dưới dạng mảng luôn
+    emit('select', [selectedImages.value[0]]) // Trả về dưới dạng mảng luôn
   }
 }
 </script>
@@ -398,7 +373,9 @@ function confirmSelection() {
 <style scoped>
 .fade-scale-enter-active,
 .fade-scale-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .fade-scale-enter-from,

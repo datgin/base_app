@@ -10,9 +10,7 @@
       @click="toggle"
     >
       <span
-        :class="[
-          'absolute top-[3px] bg-white transition-transform rounded-sm shadow',
-        ]"
+        :class="['absolute top-[3px] bg-white transition-transform rounded-sm shadow']"
         :style="{
           width: '18px',
           height: '18px',
@@ -24,36 +22,36 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import useCrud from "@/composables/useCrud.js";
-import { message } from "ant-design-vue";
+import { computed } from 'vue'
+import useCrud from '@/composables/useCrud.js'
+import { message } from 'ant-design-vue'
 
-const { post, meta, error, loading } = useCrud();
+const { post, meta, error, loading } = useCrud()
 
 const props = defineProps({
   record: { type: Object, required: true },
   field: { type: String, required: true },
   modelName: { type: String, required: true },
-});
+})
 
 // Xác định trạng thái check: record[field] == 1 là bật
-const isChecked = computed(() => props.record[props.field] == 1);
+const isChecked = computed(() => props.record[props.field] == 1)
 
 // Toggle và call API
 async function toggle() {
-  const newValue = isChecked.value ? 2 : 1;
+  const newValue = isChecked.value ? 2 : 1
 
   try {
     await post(`/bulk/${props.modelName}/publish`, {
       ids: [props.record.id],
-    });
+    })
     // eslint-disable-next-line vue/no-mutating-props
-    props.record[props.field] = newValue;
-    message.success(meta.value.message);
+    props.record[props.field] = newValue
+    message.success(meta.value.message)
   } catch (err) {
-    console.log(err);
+    console.log(err)
 
-    message.error(error.value);
+    message.error(error.value)
   }
 }
 </script>

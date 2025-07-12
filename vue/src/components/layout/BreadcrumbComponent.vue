@@ -4,11 +4,7 @@
     aria-label="Breadcrumb"
   >
     <div class="flex items-center space-x-1">
-      <TransitionGroup
-        name="breadcrumb"
-        tag="div"
-        class="flex items-center flex-wrap space-x-1"
-      >
+      <TransitionGroup name="breadcrumb" tag="div" class="flex items-center flex-wrap space-x-1">
         <div
           v-for="(item, index) in computedItems"
           :key="index"
@@ -35,10 +31,7 @@
               {{ item.title }}
             </span>
           </div>
-          <div
-            v-if="index < computedItems.length - 1"
-            class="text-gray-400"
-          >
+          <div v-if="index < computedItems.length - 1" class="text-gray-400">
             <ChevronRight class="w-4 h-4" />
           </div>
         </div>
@@ -48,9 +41,9 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useRoute } from "vue-router";
-import { ChevronRight } from "lucide-vue-next";
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { ChevronRight } from 'lucide-vue-next'
 
 // Props
 const props = defineProps({
@@ -58,20 +51,20 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-});
+})
 
 // Current route for active highlight
-const route = useRoute();
+const route = useRoute()
 
 // Always prepend 'Tổng quan' with routeName 'dashboard'
 const computedItems = computed(() => [
-  { title: "Tổng quan", routeName: "dashboard" },
+  { title: 'Tổng quan', routeName: 'dashboard' },
   ...props.items,
-]);
+])
 
 const isActive = (item) => {
-  return item.routeName === route.name;
-};
+  return item.routeName === route.name
+}
 </script>
 
 <style scoped>

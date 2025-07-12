@@ -27,16 +27,10 @@
         </button>
 
         <!-- Search Form -->
-        <form
-          class="w-full max-w-md hidden lg:block"
-          role="search"
-          @submit.prevent
-        >
+        <form class="w-full max-w-md hidden lg:block" role="search" @submit.prevent>
           <div class="relative">
             <label for="search" class="sr-only">Search</label>
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            >
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search class="h-5 w-5 text-gray-400" aria-hidden="true" />
             </div>
             <input
@@ -60,57 +54,53 @@
         />
 
         <!-- Header actions placeholder -->
-        <UserComponent
-          @toggleMenu="toggleMenu"
-          :isOpen="isOpen"
-          ref="menuComponentRef"
-        />
+        <UserComponent @toggleMenu="toggleMenu" :isOpen="isOpen" ref="menuComponentRef" />
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ChevronsLeft, Search, Menu } from "lucide-vue-next";
+import { ChevronsLeft, Search, Menu } from 'lucide-vue-next'
 
-import { onBeforeUnmount, onMounted, ref } from "vue";
-import UserComponent from "../partials/UserComponent.vue";
-import NotificationComponent from "../partials/NotificationComponent.vue";
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import UserComponent from '../partials/UserComponent.vue'
+import NotificationComponent from '../partials/NotificationComponent.vue'
 
-const isOpen = ref(false);
-const menuComponentRef = ref(null);
+const isOpen = ref(false)
+const menuComponentRef = ref(null)
 
-const isNotificationOpen = ref(false);
-const notificationComponentRef = ref(null);
+const isNotificationOpen = ref(false)
+const notificationComponentRef = ref(null)
 
 const toggleNotification = () => {
   // Mở notification thì đóng user menu
   if (!isNotificationOpen.value) {
-    isOpen.value = false;
+    isOpen.value = false
   }
-  isNotificationOpen.value = !isNotificationOpen.value;
-};
+  isNotificationOpen.value = !isNotificationOpen.value
+}
 
 const closeNotification = () => {
-  isNotificationOpen.value = false;
-};
+  isNotificationOpen.value = false
+}
 
 defineProps({
   isCollapsed: { type: Boolean, default: false },
-});
+})
 
 // const viewAllNotifications = () => {
 //   closeNotification();
 // };
 
-defineEmits(["toggleCollapse", "openMobileSidebar"]);
+defineEmits(['toggleCollapse', 'openMobileSidebar'])
 
 function toggleMenu() {
   // Mở user menu thì đóng notification
   if (!isOpen.value) {
-    isNotificationOpen.value = false;
+    isNotificationOpen.value = false
   }
-  isOpen.value = !isOpen.value;
+  isOpen.value = !isOpen.value
 }
 
 // Hàm xử lý click ngoài
@@ -120,7 +110,7 @@ function handleClickOutside(event) {
     menuComponentRef.value.menuRef &&
     !menuComponentRef.value.menuRef.contains(event.target)
   ) {
-    isOpen.value = false;
+    isOpen.value = false
   }
 
   if (
@@ -128,18 +118,18 @@ function handleClickOutside(event) {
     notificationComponentRef.value.notificationRef &&
     !notificationComponentRef.value.notificationRef.contains(event.target)
   ) {
-    isNotificationOpen.value = false;
+    isNotificationOpen.value = false
   }
 }
 
 // Gắn và gỡ listener
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
-});
+  document.addEventListener('click', handleClickOutside)
+})
 
 onBeforeUnmount(() => {
-  document.removeEventListener("click", handleClickOutside);
-});
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <style scoped></style>
