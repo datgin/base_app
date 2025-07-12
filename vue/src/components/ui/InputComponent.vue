@@ -67,8 +67,9 @@ const props = defineProps({
   type: { type: String, default: 'text' }, // for text input/password
   placeholder: { type: String, default: '' },
   size: { type: String, default: 'large' },
-  maxlength: { type: [String, Number, Boolean], default: 0 },
+  maxlength: { type: [String, Number, Boolean], default:  200},
   options: { type: Array, default: () => [] }, // for radio
+  showCount: { type: Boolean, default: true },
 })
 
 // VeeValidate useField
@@ -77,17 +78,26 @@ const { value, errorMessage } = useField(props.name, undefined, {
 })
 
 // Bindings for a-input and a-input-password
-const inputBindings = computed(() => ({
-  value: value.value,
-  'onUpdate:value': (val) => (value.value = val),
-  id: props.name,
-  type: props.type,
-  placeholder: props.placeholder,
-  status: errorMessage.value ? 'error' : '',
-  size: props.size,
-  allowClear: true,
-  class: props.className,
-}))
+const inputBindings = computed(() => {
+  const bindings = {
+    value: value.value,
+    'onUpdate:value': (val) => (value.value = val),
+    id: props.name,
+    type: props.type,
+    placeholder: props.placeholder,
+    status: errorMessage.value ? 'error' : '',
+    size: props.size,
+    allowClear: true,
+    class: props.className,
+    showCount: props.showCount,
+  }
+
+  if (props.showCount) {
+    bindings.maxlength = props.maxlength
+  }
+
+  return bindings
+})
 
 const numberBindings = computed(() => ({
   value: value.value,

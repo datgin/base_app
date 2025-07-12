@@ -23,4 +23,15 @@ export default defineConfig([
   js.configs.recommended,
   ...pluginVue.configs['flat/essential'],
   skipFormatting,
+
+  {
+    name: 'app/override-vue-rules',
+    files: ['**/*.vue'],
+    plugins: {
+      vue: pluginVue,
+    },
+    rules: {
+      'vue/no-v-model-argument': 'off',
+    },
+  },
 ])

@@ -7,7 +7,13 @@
       </div>
 
       <form @submit="onSubmit" class="space-y-5">
-        <InputComponent name="email" label="Email" :required="true" placeholder="Nhập email" />
+        <InputComponent
+          name="email"
+          label="Email"
+          maxlength="100"
+          required
+          placeholder="Nhập email"
+        />
 
         <InputComponent
           name="password"
@@ -15,6 +21,7 @@
           type="password"
           required
           placeholder="Nhập mật khẩu"
+          :showCount="false"
         />
 
         <div class="flex items-center justify-between">
