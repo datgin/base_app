@@ -57,7 +57,7 @@ class AuthController extends Controller
         ]);
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Tài khoản hoặc mật khẩu không chính xác!'], 401);
+            return errorResponse(message: "Tài khoản hoặc mật khẩu không chính xác!", code: 400);
         }
 
         return successResponse("Đăng nhập thành công.", [

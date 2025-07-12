@@ -9,15 +9,22 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const token = ref(localStorage.getItem('token') || null)
   const tokenExpiry = ref(parseInt(localStorage.getItem('tokenExpiry') || '0'))
+  const loading = ref(false)
 
-  const { getOne, post, data, error, loading } = useCrud()
+  const { getOne, data, error } = useCrud()
 
   async function login(payload) {
+    loading.value = true
     try {
-      const response = await post('/auth/login', payload)
+      const response = await axiosRaw.post(
+        `${import.meta.env.VITE_APP_API_URL}/api/auth/login`,
+        payload,
+      )
 
-      token.value = response.access_token
-      tokenExpiry.value = Date.now() + response.expires_in * 1000
+      const { access_token, expires_in } = response.data.data
+
+      token.value = access_token
+      tokenExpiry.value = Date.now() + expires_in * 1000
 
       localStorage.setItem('token', token.value)
       localStorage.setItem('tokenExpiry', tokenExpiry.value.toString())
@@ -25,7 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
       await getUser()
       router.push('/admin')
     } catch (err) {
-      error.value = err.response?.data?.error || 'Đăng nhập thất bại'
+      error.value = err.response?.data?.message || 'Đăng nhập thất bại'
       throw err
     } finally {
       loading.value = false
